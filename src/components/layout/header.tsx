@@ -1,20 +1,46 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Menu, X } from "lucide-react";
 import { SearchBar } from "./search-bar";
+import { cn } from "@/lib/utils";
 
 const navLinks = [
   { label: "Perfumes", href: "/perfumes" },
   { label: "Brands", href: "/brands" },
   { label: "Notes", href: "/notes" },
   { label: "Perfumers", href: "/perfumers" },
-  { label: "Finder", href: "/search" },
+  { label: "Finder", href: "/finder" },
+  { label: "Compare", href: "/compare" },
   { label: "Community", href: "/community" },
   { label: "Magazine", href: "/magazine" },
-  { label: "Compare", href: "/compare" },
 ];
 
 export function Header() {
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const handler = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", handler, { passive: true });
+    return () => window.removeEventListener("scroll", handler);
+  }, []);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
   return (
-    <header>
+    <header
+      className={cn(
+        "sticky top-0 z-50 transition-shadow duration-300",
+        scrolled && "shadow-[0_2px_16px_rgba(0,0,0,0.08)]"
+      )}
+    >
       {/* Top bar */}
       <div className="bg-bark-500 text-cream-300 text-xs">
         <div className="mx-auto max-w-7xl flex items-center justify-between px-4 py-1.5">
@@ -28,10 +54,16 @@ export function Header() {
             </button>
           </div>
           <div className="flex items-center gap-4">
-            <Link href="/login" className="hover:text-white transition-colors text-cream-300 no-underline">
+            <Link
+              href="/login"
+              className="hover:text-white transition-colors text-cream-300 no-underline"
+            >
               Sign In
             </Link>
-            <Link href="/register" className="hover:text-white transition-colors text-cream-300 no-underline">
+            <Link
+              href="/register"
+              className="hover:text-white transition-colors text-cream-300 no-underline"
+            >
               Register
             </Link>
           </div>
@@ -55,19 +87,75 @@ export function Header() {
       {/* Navigation */}
       <nav className="bg-white border-b border-cream-300">
         <div className="mx-auto max-w-7xl px-4">
-          <ul className="flex items-center justify-center gap-6 py-3 overflow-x-auto">
-            {navLinks.map((link) => (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  className="text-xs font-medium uppercase tracking-widest text-bark-300 hover:text-gold-500 transition-colors whitespace-nowrap no-underline"
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
+          {/* Desktop nav */}
+          <ul className="hidden md:flex items-center justify-center gap-6 py-3">
+            {navLinks.map((link) => {
+              const isActive =
+                pathname === link.href ||
+                (link.href !== "/" && pathname.startsWith(link.href));
+              return (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className={cn(
+                      "text-xs font-medium uppercase tracking-widest transition-colors whitespace-nowrap no-underline relative py-1",
+                      isActive
+                        ? "text-gold-500"
+                        : "text-bark-300 hover:text-gold-500"
+                    )}
+                  >
+                    {link.label}
+                    {isActive && (
+                      <span className="absolute -bottom-3 left-0 right-0 h-0.5 bg-gold-500 rounded-full" />
+                    )}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
+
+          {/* Mobile hamburger */}
+          <div className="flex md:hidden items-center justify-between py-3">
+            <span className="text-xs font-medium uppercase tracking-widest text-bark-300">
+              Menu
+            </span>
+            <button
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="p-2 text-bark-400 hover:text-gold-500 transition-colors"
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            >
+              {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
         </div>
+
+        {/* Mobile dropdown */}
+        {mobileOpen && (
+          <div className="md:hidden bg-white border-t border-cream-200">
+            <ul className="mx-auto max-w-7xl px-4 py-3 space-y-1">
+              {navLinks.map((link) => {
+                const isActive =
+                  pathname === link.href ||
+                  (link.href !== "/" && pathname.startsWith(link.href));
+                return (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className={cn(
+                        "block text-sm font-medium py-2 px-3 rounded-md transition-colors no-underline",
+                        isActive
+                          ? "text-gold-500 bg-gold-50"
+                          : "text-bark-300 hover:text-gold-500 hover:bg-cream-50"
+                      )}
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )}
       </nav>
     </header>
   );

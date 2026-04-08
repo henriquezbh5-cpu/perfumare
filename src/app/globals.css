@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+}
+
 @theme inline {
   /* Cream palette */
   --color-cream-50: #faf8f4;
@@ -62,6 +66,36 @@ a {
 
 a:hover {
   color: var(--color-gold-600);
+}
+
+/* Smooth transitions for interactive elements */
+button, a, .transition-all {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Selection color */
+::selection {
+  background-color: var(--color-gold-200);
+  color: var(--color-bark-500);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-cream-100);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-cream-400);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-cream-500);
 }
 
 /* Component classes */
