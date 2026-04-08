@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardBody } from "@/components/ui/card";
 import { PerfumeBottleSvg } from "@/components/ui/perfume-bottle-svg";
 import { Star, PenLine } from "lucide-react";
+import { ArabianDivider, ArabianCorner } from "@/components/ui/arabian-patterns";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -168,6 +169,17 @@ export default async function PerfumeDetailPage({ params }: Props) {
             background: `linear-gradient(135deg, ${mainAccordColor}08, ${mainAccordColor}04, transparent)`,
           }}
         />
+        {/* Subtle arabesque corner decorations */}
+        <ArabianCorner
+          className="absolute top-2 left-2 opacity-20"
+          color={mainAccordColor}
+          size={50}
+        />
+        <ArabianCorner
+          className="absolute bottom-2 right-2 opacity-20 rotate-180"
+          color={mainAccordColor}
+          size={50}
+        />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 py-6">
           {/* Image */}
           <div
@@ -302,8 +314,12 @@ export default async function PerfumeDetailPage({ params }: Props) {
       {/* Accords */}
       {accords.length > 0 && <AccordBars accords={accords} />}
 
+      <ArabianDivider />
+
       {/* Notes Pyramid */}
       <NotesPyramid top={topNotes} heart={heartNotes} base={baseNotes} />
+
+      <ArabianDivider />
 
       {/* Performance */}
       <PerformanceVotes
@@ -323,6 +339,8 @@ export default async function PerfumeDetailPage({ params }: Props) {
 
       {/* Where to Buy */}
       <WhereToBuy links={affiliateLinks} />
+
+      <ArabianDivider />
 
       {/* Reviews Section */}
       <section>

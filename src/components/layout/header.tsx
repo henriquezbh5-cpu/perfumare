@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { SearchBar } from "./search-bar";
+import { ArabianDivider, ArabianBorder } from "@/components/ui/arabian-patterns";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
@@ -41,6 +42,9 @@ export function Header() {
         scrolled && "shadow-[0_2px_16px_rgba(0,0,0,0.08)]"
       )}
     >
+      {/* Arabesque decorative border at very top */}
+      <ArabianBorder className="bg-bark-600" color="#c9a96240" />
+
       {/* Top bar */}
       <div className="bg-bark-500 text-cream-300 text-xs">
         <div className="mx-auto max-w-7xl flex items-center justify-between px-4 py-1.5">
@@ -73,11 +77,11 @@ export function Header() {
       {/* Logo section */}
       <div className="bg-cream-100 py-6">
         <div className="mx-auto max-w-7xl px-4 text-center">
-          <p className="section-title mb-2">The Fragrance Encyclopedia</p>
+          <p className="section-title mb-2">The Art of Arabian Perfumery</p>
           <h1 className="text-3xl md:text-4xl font-serif text-bark-500 tracking-wide">
             Perfumare
           </h1>
-          <div className="gold-divider mt-3" />
+          <ArabianDivider className="mt-3" />
           <div className="mt-4 max-w-md mx-auto">
             <SearchBar />
           </div>

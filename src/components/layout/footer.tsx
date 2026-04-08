@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { ArabianBorder, ArabianStar } from "@/components/ui/arabian-patterns";
 
 const columns = [
   {
@@ -55,6 +56,9 @@ function SocialIcon({ name, children }: { name: string; children: React.ReactNod
 export function Footer() {
   return (
     <footer className="bg-bark-500 text-cream-300">
+      {/* Arabesque border at top of footer */}
+      <ArabianBorder color="#c9a96230" />
+
       <div className="mx-auto max-w-7xl px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-6 gap-8">
           {/* Brand + newsletter */}
@@ -62,8 +66,9 @@ export function Footer() {
             <h3 className="font-serif text-xl text-white mb-2">
               Perfumare
             </h3>
+            <ArabianStar size={16} color="#c9a962" className="mb-3 opacity-60" />
             <p className="text-sm text-cream-500 leading-relaxed mb-6">
-              The ultimate fragrance encyclopedia. Discover, compare, and review
+              Inspired by the artisans of Arabia. Discover, compare, and review
               thousands of perfumes from around the world.
             </p>
 
@@ -183,7 +188,7 @@ export function Footer() {
             reserved.
           </p>
           <p className="text-xs text-cream-600">
-            Built with passion for fragrance lovers everywhere.
+            Where ancient traditions meet modern luxury.
           </p>
         </div>
       </div>

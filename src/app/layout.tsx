@@ -1,13 +1,27 @@
 import type { Metadata } from "next";
+import { Playfair_Display, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-playfair",
+  display: "swap",
+});
+
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  variable: "--font-cormorant",
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: {
     template: "%s | Perfumare",
-    default: "Perfumare — The Fragrance Encyclopedia",
+    default: "Perfumare — The Art of Arabian Perfumery",
   },
   description:
-    "Discover, compare, and review thousands of perfumes. The ultimate fragrance encyclopedia for scent lovers worldwide.",
+    "Discover, compare, and review thousands of perfumes. Where ancient traditions meet modern luxury. The ultimate fragrance encyclopedia.",
 };
 
 export default function RootLayout({
@@ -16,7 +30,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full antialiased">
+    <html
+      lang="en"
+      className={`h-full antialiased ${playfair.variable} ${cormorant.variable}`}
+    >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

@@ -14,6 +14,11 @@ import {
   MessageSquare,
   Search,
 } from "lucide-react";
+import {
+  ArabianDivider,
+  ArabianStar,
+  ArabianCorner,
+} from "@/components/ui/arabian-patterns";
 
 const familyIcons: Record<string, string> = {
   Woody: "\ud83e\udeb5",
@@ -129,16 +134,35 @@ export default async function HomePage() {
           }}
         />
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_30%_50%,white_0%,transparent_50%)]" />
+        {/* Subtle geometric texture overlay */}
+        <div
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage:
+              "repeating-linear-gradient(45deg, transparent, transparent 20px, white 20px, white 21px), repeating-linear-gradient(-45deg, transparent, transparent 20px, white 20px, white 21px)",
+          }}
+        />
+        {/* Arabesque corner decorations */}
+        <ArabianCorner
+          className="absolute top-4 left-4 opacity-30"
+          color="#c9a962"
+          size={80}
+        />
+        <ArabianCorner
+          className="absolute bottom-4 right-4 opacity-30 rotate-180"
+          color="#c9a962"
+          size={80}
+        />
         <div className="relative z-10 py-16 md:py-24 text-center max-w-3xl mx-auto">
           <p className="text-xs tracking-[4px] uppercase text-gold-400 mb-4">
-            The Fragrance Encyclopedia
+            The Art of Arabian Perfumery
           </p>
           <h1 className="text-4xl md:text-6xl font-serif text-white mb-6 leading-tight">
-            Discover Your
+            Where Ancient Traditions
             <br />
-            <span className="text-gold-400">Signature Scent</span>
+            <span className="text-gold-400">Meet Modern Luxury</span>
           </h1>
-          <div className="w-16 h-px mx-auto mb-6 bg-gradient-to-r from-transparent via-gold-400 to-transparent" />
+          <ArabianDivider className="mb-6" color="#c9a96280" />
           <p className="text-cream-300 text-lg md:text-xl mb-8 max-w-xl mx-auto leading-relaxed">
             Explore thousands of perfumes, read expert reviews, and find the
             fragrance that defines you.
@@ -186,6 +210,9 @@ export default async function HomePage() {
           })}
         </div>
       </section>
+
+      {/* Divider */}
+      <ArabianDivider />
 
       {/* Fragrance of the Day */}
       {featuredPerfume && (
@@ -275,6 +302,11 @@ export default async function HomePage() {
         </section>
       )}
 
+      {/* Star accent */}
+      <div className="flex justify-center">
+        <ArabianStar size={20} color="#c9a962" className="opacity-40" />
+      </div>
+
       {/* New Arrivals */}
       {newArrivals.length > 0 && (
         <section>
@@ -359,6 +391,9 @@ export default async function HomePage() {
         </section>
       )}
 
+      {/* Divider */}
+      <ArabianDivider />
+
       {/* Browse by Note Family */}
       {noteFamilies.length > 0 && (
         <section>
@@ -430,6 +465,11 @@ export default async function HomePage() {
         </section>
       )}
 
+      {/* Star accent */}
+      <div className="flex justify-center">
+        <ArabianStar size={20} color="#c9a962" className="opacity-40" />
+      </div>
+
       {/* Featured Arabian Houses */}
       {arabianBrands.length > 0 && (
         <section>
@@ -473,6 +513,9 @@ export default async function HomePage() {
           </div>
         </section>
       )}
+
+      {/* Divider */}
+      <ArabianDivider />
 
       {/* Latest Reviews */}
       <section>

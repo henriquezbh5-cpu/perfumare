@@ -23,6 +23,13 @@ html {
   --color-gold-500: #8b6914;
   --color-gold-600: #7a5c12;
   --color-gold-700: #5a4410;
+  --color-gold-deep: #B8860B;
+
+  /* Ruby accent */
+  --color-ruby: #722F37;
+
+  /* Smoke / incense */
+  --color-smoke: #E8E0D8;
 
   /* Bark palette */
   --color-bark-50: #f5f0e8;
@@ -33,8 +40,9 @@ html {
   --color-bark-500: #2c1810;
   --color-bark-600: #1a0e08;
 
-  /* Font families */
-  --font-serif: Georgia, Cambria, "Times New Roman", serif;
+  /* Font families — Playfair Display for headings, Cormorant Garamond for accents */
+  --font-serif: var(--font-playfair), Georgia, Cambria, "Times New Roman", serif;
+  --font-cormorant: var(--font-cormorant), Georgia, Cambria, serif;
   --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
   /* Border radius */
@@ -52,6 +60,22 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Subtle geometric background texture */
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 40px,
+      rgba(201, 169, 98, 0.015) 40px,
+      rgba(201, 169, 98, 0.015) 41px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 40px,
+      rgba(201, 169, 98, 0.015) 40px,
+      rgba(201, 169, 98, 0.015) 41px
+    );
 }
 
 h1, h2, h3, h4 {
@@ -73,9 +97,9 @@ button, a, .transition-all {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Selection color */
+/* Selection color — rich gold */
 ::selection {
-  background-color: var(--color-gold-200);
+  background-color: rgba(201, 169, 98, 0.35);
   color: var(--color-bark-500);
 }
 
@@ -122,4 +146,59 @@ button, a, .transition-all {
   padding: 0.25rem 0.75rem;
   border-radius: var(--radius-chip);
   display: inline-block;
+}
+
+/* Gold shimmer text effect */
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.text-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-gold-500) 0%,
+    var(--color-gold-400) 25%,
+    #e8d5a0 50%,
+    var(--color-gold-400) 75%,
+    var(--color-gold-500) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 4s linear infinite;
+}
+
+/* Arabian geometric border pattern via CSS */
+.border-arabian {
+  border-image: repeating-linear-gradient(
+    90deg,
+    transparent 0px,
+    transparent 8px,
+    var(--color-gold-400) 8px,
+    var(--color-gold-400) 10px,
+    transparent 10px,
+    transparent 14px,
+    var(--color-gold-300) 14px,
+    var(--color-gold-300) 15px
+  ) 1;
+}
+
+/* Section divider with arabesque feel */
+.section-divider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 0;
+}
+
+.section-divider::before,
+.section-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-gold-400), transparent);
+  opacity: 0.4;
 }
