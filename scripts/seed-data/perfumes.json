@@ -1,0 +1,222 @@
+[
+  {
+    "name": "Khamrah",
+    "brand": "Lattafa Perfumes",
+    "perfumer": "Jordi Fernandez",
+    "gender": "unisex",
+    "year": 2022,
+    "concentration": "EDP",
+    "description": "An oriental vanilla masterpiece that opens with dried fruits and spices, leading to Turkish rose and praline, resting on oud, vanilla, and tonka bean.",
+    "notes": { "top": ["Cinnamon", "Nutmeg", "Bergamot"], "middle": ["Turkish Rose", "Praline", "Date"], "base": ["Oud", "Vanilla", "Tonka Bean", "Benzoin"] },
+    "accords": { "Sweet": 92, "Warm Spicy": 85, "Vanilla": 78, "Oud": 65, "Amber": 55, "Gourmand": 50 }
+  },
+  {
+    "name": "Baccarat Rouge 540",
+    "brand": "Maison Francis Kurkdjian",
+    "perfumer": "Francis Kurkdjian",
+    "gender": "unisex",
+    "year": 2015,
+    "concentration": "EDP",
+    "description": "A luminous composition built around saffron, jasmine, and ambergris. A modern classic.",
+    "notes": { "top": ["Saffron", "Jasmine"], "middle": ["Amber", "Cedar"], "base": ["Vanilla", "Musk", "Cedar"] },
+    "accords": { "Sweet": 88, "Amber": 82, "Woody": 65, "Warm Spicy": 55, "Floral": 40, "Musky": 35 }
+  },
+  {
+    "name": "Interlude Man",
+    "brand": "Amouage",
+    "perfumer": "Pierre Montale",
+    "gender": "male",
+    "year": 2012,
+    "concentration": "EDP",
+    "description": "A powerful smoky-incense composition capturing controlled chaos.",
+    "notes": { "top": ["Bergamot", "Pepper", "Nutmeg"], "middle": ["Incense", "Labdanum", "Frankincense"], "base": ["Oud", "Sandalwood", "Amber", "Musk"] },
+    "accords": { "Smoky": 90, "Incense": 88, "Warm Spicy": 80, "Oud": 75, "Amber": 70, "Woody": 65 }
+  },
+  {
+    "name": "Oud for Greatness",
+    "brand": "Initio Parfums",
+    "perfumer": "Sidonie Lancesseur",
+    "gender": "unisex",
+    "year": 2018,
+    "concentration": "EDP",
+    "description": "A bold oud-saffron composition with unexpected lavender freshness.",
+    "notes": { "top": ["Saffron", "Lavender", "Nutmeg"], "middle": ["Oud", "Incense"], "base": ["Musk", "Vanilla", "Amber"] },
+    "accords": { "Oud": 92, "Warm Spicy": 78, "Amber": 65, "Musky": 55, "Woody": 50 }
+  },
+  {
+    "name": "Oud Wood",
+    "brand": "Tom Ford",
+    "perfumer": "Richard Herpin",
+    "gender": "unisex",
+    "year": 2007,
+    "concentration": "EDP",
+    "description": "The fragrance that introduced oud to mainstream Western perfumery.",
+    "notes": { "top": ["Cardamom", "Pepper", "Cinnamon"], "middle": ["Oud", "Sandalwood", "Vetiver"], "base": ["Tonka Bean", "Vanilla", "Amber"] },
+    "accords": { "Woody": 88, "Oud": 75, "Warm Spicy": 60, "Amber": 50, "Sweet": 40, "Leather": 30 }
+  },
+  {
+    "name": "Raghba",
+    "brand": "Lattafa Perfumes",
+    "perfumer": null,
+    "gender": "unisex",
+    "year": 2015,
+    "concentration": "EDP",
+    "description": "A warm, inviting oriental with prominent vanilla, oud, and balsamic notes.",
+    "notes": { "top": ["Bergamot", "Cardamom"], "middle": ["Rose", "Jasmine", "Saffron"], "base": ["Oud", "Vanilla", "Benzoin", "Musk"] },
+    "accords": { "Sweet": 90, "Vanilla": 85, "Oud": 70, "Amber": 65, "Balsamic": 55, "Warm Spicy": 45 }
+  },
+  {
+    "name": "Oud for Glory",
+    "brand": "Lattafa Perfumes",
+    "perfumer": null,
+    "gender": "unisex",
+    "year": 2022,
+    "concentration": "EDP",
+    "description": "A bold oriental oud composition frequently compared to Initio's Oud for Greatness.",
+    "notes": { "top": ["Saffron", "Lavender"], "middle": ["Oud", "Frankincense"], "base": ["Vanilla", "Musk", "Amber"] },
+    "accords": { "Oud": 90, "Warm Spicy": 75, "Amber": 65, "Musky": 60, "Sweet": 50 }
+  },
+  {
+    "name": "Reflection Man",
+    "brand": "Amouage",
+    "perfumer": null,
+    "gender": "male",
+    "year": 2007,
+    "concentration": "EDP",
+    "description": "An elegant floral-woody composition. Jasmine and iris create sophistication.",
+    "notes": { "top": ["Pepper", "Bergamot", "Apple"], "middle": ["Jasmine", "Iris", "Orange Blossom"], "base": ["Sandalwood", "Cedar", "Musk"] },
+    "accords": { "Floral": 88, "Powdery": 75, "Woody": 65, "Fresh": 55, "Musky": 45 }
+  },
+  {
+    "name": "Hacivat",
+    "brand": "Nishane",
+    "perfumer": null,
+    "gender": "unisex",
+    "year": 2017,
+    "concentration": "Parfum",
+    "description": "A fresh woody-fruity composition often compared to Creed Aventus.",
+    "notes": { "top": ["Bergamot", "Ginger", "Lemon"], "middle": ["Cedar", "Patchouli", "Jasmine"], "base": ["Sandalwood", "Oakmoss", "Musk"] },
+    "accords": { "Woody": 85, "Citrus": 75, "Fresh": 70, "Aromatic": 55, "Musky": 40 }
+  },
+  {
+    "name": "Layton",
+    "brand": "Parfums de Marly",
+    "perfumer": "Hamid Merati-Kashani",
+    "gender": "male",
+    "year": 2016,
+    "concentration": "EDP",
+    "description": "A rich spicy-vanilla composition with apple and cardamom.",
+    "notes": { "top": ["Apple", "Bergamot", "Lavender"], "middle": ["Jasmine", "Cardamom", "Pepper"], "base": ["Vanilla", "Sandalwood", "Amber"] },
+    "accords": { "Warm Spicy": 85, "Sweet": 80, "Vanilla": 70, "Fresh": 55, "Woody": 50, "Amber": 45 }
+  },
+  {
+    "name": "Aventus",
+    "brand": "Creed",
+    "perfumer": null,
+    "gender": "male",
+    "year": 2010,
+    "concentration": "EDP",
+    "description": "The modern king of fragrances. Fruity, smoky, woody composition.",
+    "notes": { "top": ["Bergamot", "Apple", "Lemon"], "middle": ["Jasmine", "Cedar", "Pepper"], "base": ["Musk", "Oakmoss", "Vanilla", "Patchouli"] },
+    "accords": { "Woody": 80, "Fruity": 75, "Fresh": 70, "Citrus": 60, "Smoky": 45, "Musky": 40 }
+  },
+  {
+    "name": "Amber Oud Gold Edition",
+    "brand": "Al Haramain",
+    "perfumer": null,
+    "gender": "unisex",
+    "year": 2019,
+    "concentration": "EDP",
+    "description": "A luxurious amber-oud composition with prominent saffron and vanilla.",
+    "notes": { "top": ["Saffron", "Bergamot"], "middle": ["Oud", "Rose", "Amber"], "base": ["Vanilla", "Musk", "Cedar"] },
+    "accords": { "Amber": 90, "Oud": 80, "Sweet": 70, "Warm Spicy": 65, "Vanilla": 55, "Woody": 45 }
+  },
+  {
+    "name": "Grand Soir",
+    "brand": "Maison Francis Kurkdjian",
+    "perfumer": "Francis Kurkdjian",
+    "gender": "unisex",
+    "year": 2016,
+    "concentration": "EDP",
+    "description": "An amber dream. Warm benzoin and vanilla wrapped in a sophisticated cocoon.",
+    "notes": { "top": ["Bergamot", "Cinnamon"], "middle": ["Amber", "Labdanum"], "base": ["Benzoin", "Vanilla", "Tonka Bean"] },
+    "accords": { "Amber": 95, "Sweet": 82, "Vanilla": 78, "Balsamic": 65, "Warm Spicy": 50, "Resinous": 45 }
+  },
+  {
+    "name": "Tobacco Vanilla",
+    "brand": "Tom Ford",
+    "perfumer": null,
+    "gender": "unisex",
+    "year": 2007,
+    "concentration": "EDP",
+    "description": "A warm, spicy, opulent blend of tobacco leaf with vanilla and tonka bean.",
+    "notes": { "top": ["Tobacco", "Ginger"], "middle": ["Cinnamon", "Vanilla", "Tonka Bean"], "base": ["Benzoin", "Honey", "Caramel"] },
+    "accords": { "Sweet": 90, "Warm Spicy": 82, "Vanilla": 80, "Gourmand": 70, "Smoky": 50, "Amber": 45 }
+  },
+  {
+    "name": "Midnight Oud",
+    "brand": "Ard Al Zaafaran",
+    "perfumer": null,
+    "gender": "unisex",
+    "year": 2018,
+    "concentration": "EDP",
+    "description": "A dark, mysterious oud composition with smoky incense and warm amber.",
+    "notes": { "top": ["Saffron", "Pepper"], "middle": ["Oud", "Incense", "Rose"], "base": ["Amber", "Musk", "Sandalwood"] },
+    "accords": { "Oud": 88, "Smoky": 75, "Warm Spicy": 70, "Amber": 65, "Incense": 60, "Woody": 50 }
+  },
+  {
+    "name": "Asad",
+    "brand": "Lattafa Perfumes",
+    "perfumer": null,
+    "gender": "male",
+    "year": 2022,
+    "concentration": "EDP",
+    "description": "A bold smoky-sweet fragrance with tobacco, vanilla, and oud.",
+    "notes": { "top": ["Pepper", "Bergamot"], "middle": ["Tobacco", "Coffee", "Oud"], "base": ["Vanilla", "Amber", "Benzoin"] },
+    "accords": { "Sweet": 85, "Smoky": 78, "Warm Spicy": 72, "Vanilla": 68, "Oud": 55, "Gourmand": 50 }
+  },
+  {
+    "name": "Jubilation XXV",
+    "brand": "Amouage",
+    "perfumer": null,
+    "gender": "male",
+    "year": 2007,
+    "concentration": "EDP",
+    "description": "A majestic oriental celebrating Amouage's 25th anniversary.",
+    "notes": { "top": ["Frankincense", "Orange Blossom", "Bergamot"], "middle": ["Rose", "Myrrh", "Honey"], "base": ["Oud", "Sandalwood", "Musk", "Cedar"] },
+    "accords": { "Resinous": 88, "Incense": 82, "Warm Spicy": 75, "Oud": 70, "Sweet": 60, "Woody": 55 }
+  },
+  {
+    "name": "Intense Oud",
+    "brand": "Arabian Oud",
+    "perfumer": null,
+    "gender": "unisex",
+    "year": 2015,
+    "concentration": "EDP",
+    "description": "A pure, powerful oud experience with rose and musk.",
+    "notes": { "top": ["Saffron", "Cardamom"], "middle": ["Oud", "Rose"], "base": ["Sandalwood", "Musk", "Amber"] },
+    "accords": { "Oud": 95, "Woody": 80, "Warm Spicy": 65, "Rose": 55, "Musky": 50, "Amber": 40 }
+  },
+  {
+    "name": "Shaheen",
+    "brand": "Swiss Arabian",
+    "perfumer": null,
+    "gender": "unisex",
+    "year": 2019,
+    "concentration": "EDP",
+    "description": "A fresh modern take on Arabian perfumery with citrus and oud.",
+    "notes": { "top": ["Bergamot", "Lemon", "Pepper"], "middle": ["Oud", "Geranium", "Cedar"], "base": ["Amber", "Vetiver", "Musk"] },
+    "accords": { "Woody": 82, "Fresh": 70, "Oud": 65, "Citrus": 60, "Amber": 50, "Aromatic": 45 }
+  },
+  {
+    "name": "Oud Silk Mood",
+    "brand": "Maison Francis Kurkdjian",
+    "perfumer": "Francis Kurkdjian",
+    "gender": "unisex",
+    "year": 2013,
+    "concentration": "EDP",
+    "description": "An exquisite blend of oud with Bulgarian rose and satin-smooth vanilla.",
+    "notes": { "top": ["Rose", "Saffron"], "middle": ["Oud", "Incense"], "base": ["Vanilla", "Benzoin", "Musk"] },
+    "accords": { "Oud": 85, "Rose": 75, "Sweet": 65, "Warm Spicy": 55, "Amber": 50, "Vanilla": 45 }
+  }
+]

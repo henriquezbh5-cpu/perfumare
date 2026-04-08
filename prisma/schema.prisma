@@ -1,0 +1,359 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearchPostgres"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── AUTH ────────────────────────────────────────────
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ─── USER ────────────────────────────────────────────
+
+model User {
+  id            String        @id @default(cuid())
+  username      String?       @unique
+  email         String?       @unique
+  emailVerified DateTime?
+  name          String?
+  image         String?
+  bio           String?       @db.Text
+  role          String        @default("user")
+  locale        String        @default("en")
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  accounts      Account[]
+  sessions      Session[]
+  reviews       Review[]
+  perfumeVotes  PerfumeVote[]
+  reviewVotes   ReviewVote[]
+  wardrobe      Wardrobe[]
+  forumThreads  ForumThread[]
+  forumPosts    ForumPost[]
+  articles      Article[]
+  reports       Report[]      @relation("Reporter")
+  badges        UserBadge[]
+}
+
+// ─── PERFUME CORE ────────────────────────────────────
+
+model Brand {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  name        String
+  country     String?
+  description String?   @db.Text
+  logoUrl     String?
+  websiteUrl  String?
+  founded     Int?
+  category    String    @default("Designer")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  perfumes    Perfume[]
+  perfumers   PerfumerBrand[]
+}
+
+model Perfumer {
+  id          String            @id @default(cuid())
+  slug        String            @unique
+  name        String
+  bio         String?           @db.Text
+  photoUrl    String?
+  nationality String?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  perfumes    Perfume[]
+  brands      PerfumerBrand[]
+}
+
+model PerfumerBrand {
+  perfumerId String
+  brandId    String
+  perfumer   Perfumer @relation(fields: [perfumerId], references: [id], onDelete: Cascade)
+  brand      Brand    @relation(fields: [brandId], references: [id], onDelete: Cascade)
+
+  @@id([perfumerId, brandId])
+}
+
+model Perfume {
+  id             String          @id @default(cuid())
+  slug           String          @unique
+  name           String
+  description    String?         @db.Text
+  gender         String          @default("unisex")
+  year           Int?
+  concentration  String          @default("EDP")
+  imageUrl       String?
+  brandId        String
+  perfumerId     String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  brand          Brand           @relation(fields: [brandId], references: [id])
+  perfumer       Perfumer?       @relation(fields: [perfumerId], references: [id])
+  notes          PerfumeNote[]
+  accords        PerfumeAccord[]
+  reviews        Review[]
+  votes          PerfumeVote[]
+  wardrobe       Wardrobe[]
+  affiliateLinks AffiliateLink[]
+
+  @@index([brandId])
+  @@index([perfumerId])
+  @@index([gender])
+  @@index([year])
+}
+
+model Note {
+  id          String        @id @default(cuid())
+  slug        String        @unique
+  name        String
+  family      String
+  description String?       @db.Text
+  imageUrl    String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  perfumes    PerfumeNote[]
+
+  @@index([family])
+}
+
+model PerfumeNote {
+  perfumeId String
+  noteId    String
+  layer     String
+  voteCount Int     @default(0)
+  perfume   Perfume @relation(fields: [perfumeId], references: [id], onDelete: Cascade)
+  note      Note    @relation(fields: [noteId], references: [id], onDelete: Cascade)
+
+  @@id([perfumeId, noteId])
+}
+
+model Accord {
+  id       String          @id @default(cuid())
+  name     String          @unique
+  color    String
+  perfumes PerfumeAccord[]
+}
+
+model PerfumeAccord {
+  perfumeId String
+  accordId  String
+  intensity Int     @default(50)
+  perfume   Perfume @relation(fields: [perfumeId], references: [id], onDelete: Cascade)
+  accord    Accord  @relation(fields: [accordId], references: [id], onDelete: Cascade)
+
+  @@id([perfumeId, accordId])
+}
+
+// ─── REVIEWS & VOTES ─────────────────────────────────
+
+model Review {
+  id              String       @id @default(cuid())
+  userId          String
+  perfumeId       String
+  title           String
+  body            String       @db.Text
+  rating          Int
+  helpfulCount    Int          @default(0)
+  notHelpfulCount Int          @default(0)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  deletedAt       DateTime?
+  user            User         @relation(fields: [userId], references: [id])
+  perfume         Perfume      @relation(fields: [perfumeId], references: [id])
+  votes           ReviewVote[]
+
+  @@index([perfumeId, createdAt])
+  @@index([userId])
+}
+
+model ReviewVote {
+  userId   String
+  reviewId String
+  type     String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  review   Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  @@id([userId, reviewId])
+}
+
+model PerfumeVote {
+  userId     String
+  perfumeId  String
+  longevity  Int?
+  sillage    String?
+  priceValue Int?
+  season     String?
+  timeOfDay  String?
+  createdAt  DateTime @default(now())
+  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  perfume    Perfume @relation(fields: [perfumeId], references: [id], onDelete: Cascade)
+
+  @@id([userId, perfumeId])
+}
+
+// ─── WARDROBE ────────────────────────────────────────
+
+model Wardrobe {
+  userId         String
+  perfumeId      String
+  status         String
+  personalRating Int?
+  addedAt        DateTime @default(now())
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  perfume        Perfume  @relation(fields: [perfumeId], references: [id], onDelete: Cascade)
+
+  @@id([userId, perfumeId])
+}
+
+// ─── FORUMS ──────────────────────────────────────────
+
+model ForumCategory {
+  id          String        @id @default(cuid())
+  name        String
+  slug        String        @unique
+  description String?
+  sortOrder   Int           @default(0)
+  threads     ForumThread[]
+}
+
+model ForumThread {
+  id         String        @id @default(cuid())
+  categoryId String
+  userId     String
+  title      String
+  isPinned   Boolean       @default(false)
+  isLocked   Boolean       @default(false)
+  viewCount  Int           @default(0)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  category   ForumCategory @relation(fields: [categoryId], references: [id])
+  user       User          @relation(fields: [userId], references: [id])
+  posts      ForumPost[]
+
+  @@index([categoryId, createdAt])
+}
+
+model ForumPost {
+  id           String      @id @default(cuid())
+  threadId     String
+  userId       String
+  body         String      @db.Text
+  quotedPostId String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  deletedAt    DateTime?
+  thread       ForumThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  user         User        @relation(fields: [userId], references: [id])
+  quotedPost   ForumPost?  @relation("QuotedPost", fields: [quotedPostId], references: [id])
+  quotes       ForumPost[] @relation("QuotedPost")
+
+  @@index([threadId, createdAt])
+}
+
+// ─── CONTENT ─────────────────────────────────────────
+
+model Article {
+  id            String    @id @default(cuid())
+  slug          String    @unique
+  title         String
+  body          String    @db.Text
+  excerpt       String?
+  authorId      String
+  category      String
+  tags          String[]
+  featuredImage String?
+  publishedAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  author        User      @relation(fields: [authorId], references: [id])
+
+  @@index([category])
+  @@index([publishedAt])
+}
+
+// ─── MONETIZATION ────────────────────────────────────
+
+model AffiliateLink {
+  id          String   @id @default(cuid())
+  perfumeId   String
+  retailer    String
+  url         String
+  price       Decimal? @db.Decimal(10, 2)
+  currency    String   @default("USD")
+  lastChecked DateTime?
+  perfume     Perfume  @relation(fields: [perfumeId], references: [id], onDelete: Cascade)
+
+  @@index([perfumeId])
+}
+
+// ─── MODERATION ──────────────────────────────────────
+
+model Report {
+  id         String   @id @default(cuid())
+  reporterId String
+  targetType String
+  targetId   String
+  reason     String
+  status     String   @default("pending")
+  createdAt  DateTime @default(now())
+  reporter   User     @relation("Reporter", fields: [reporterId], references: [id])
+
+  @@index([status])
+}
+
+// ─── BADGES ──────────────────────────────────────────
+
+model Badge {
+  id          String      @id @default(cuid())
+  name        String      @unique
+  description String
+  iconUrl     String?
+  criteria    Json?
+  users       UserBadge[]
+}
+
+model UserBadge {
+  userId    String
+  badgeId   String
+  awardedAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badge     Badge    @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+
+  @@id([userId, badgeId])
+}
