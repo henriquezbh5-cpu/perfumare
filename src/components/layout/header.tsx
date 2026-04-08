@@ -75,7 +75,7 @@ export function Header() {
         <div className="mx-auto max-w-7xl px-4 text-center">
           <p className="section-title mb-2">The Fragrance Encyclopedia</p>
           <h1 className="text-3xl md:text-4xl font-serif text-bark-500 tracking-wide">
-            1000PerfumesNight
+            Perfumare
           </h1>
           <div className="gold-divider mt-3" />
           <div className="mt-4 max-w-md mx-auto">

@@ -4,7 +4,7 @@ import { PerfumeCard } from "@/components/perfume/perfume-card";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
-  title: "Advanced Search | 1000PerfumesNight",
+  title: "Advanced Search | Perfumare",
   description:
     "Search for perfumes by keyword, gender, and concentration.",
 };

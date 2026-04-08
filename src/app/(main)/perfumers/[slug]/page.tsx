@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: `${perfumer.name} - Perfumer | 1000PerfumesNight`,
+    title: `${perfumer.name} - Perfumer | Perfumare`,
     description:
       perfumer.bio ??
       `Explore all ${perfumer._count.perfumes} creations by ${perfumer.name}.`,

@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { getInitials } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "All Brands | 1000PerfumesNight",
+  title: "All Brands | Perfumare",
   description:
     "Explore our directory of perfume brands from around the world, including designer and Arabian houses.",
 };

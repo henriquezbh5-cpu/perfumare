@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: `${brand.name} Perfumes | 1000PerfumesNight`,
+    title: `${brand.name} Perfumes | Perfumare`,
     description:
       brand.description ??
       `Explore all ${brand._count.perfumes} perfumes by ${brand.name}.`,

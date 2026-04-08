@@ -3,8 +3,8 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | 1000PerfumesNight",
-    default: "1000PerfumesNight — The Fragrance Encyclopedia",
+    template: "%s | Perfumare",
+    default: "Perfumare — The Fragrance Encyclopedia",
   },
   description:
     "Discover, compare, and review thousands of perfumes. The ultimate fragrance encyclopedia for scent lovers worldwide.",

@@ -60,7 +60,7 @@ export function Footer() {
           {/* Brand + newsletter */}
           <div className="md:col-span-2">
             <h3 className="font-serif text-xl text-white mb-2">
-              1000PerfumesNight
+              Perfumare
             </h3>
             <p className="text-sm text-cream-500 leading-relaxed mb-6">
               The ultimate fragrance encyclopedia. Discover, compare, and review
@@ -179,7 +179,7 @@ export function Footer() {
       <div className="border-t border-bark-400">
         <div className="mx-auto max-w-7xl px-4 py-4 flex flex-col md:flex-row items-center justify-between gap-2">
           <p className="text-xs text-cream-500">
-            &copy; {new Date().getFullYear()} 1000PerfumesNight. All rights
+            &copy; {new Date().getFullYear()} Perfumare. All rights
             reserved.
           </p>
           <p className="text-xs text-cream-600">
