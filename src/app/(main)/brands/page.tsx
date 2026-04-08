@@ -5,8 +5,6 @@ import { Card, CardBody } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { getInitials } from "@/lib/utils";
 
-export const revalidate = 86400;
-
 export const metadata: Metadata = {
   title: "All Brands | 1000PerfumesNight",
   description:

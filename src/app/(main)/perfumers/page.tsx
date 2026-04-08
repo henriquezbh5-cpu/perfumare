@@ -4,8 +4,6 @@ import { db } from "@/lib/db";
 import { Card, CardBody } from "@/components/ui/card";
 import { getInitials } from "@/lib/utils";
 
-export const revalidate = 86400;
-
 export const metadata: Metadata = {
   title: "Perfumers | 1000PerfumesNight",
   description:

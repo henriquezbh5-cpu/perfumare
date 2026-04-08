@@ -3,8 +3,6 @@ import type { Metadata } from "next";
 import { db } from "@/lib/db";
 import { Badge } from "@/components/ui/badge";
 
-export const revalidate = 86400;
-
 export const metadata: Metadata = {
   title: "Fragrance Notes | 1000PerfumesNight",
   description:

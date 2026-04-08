@@ -5,8 +5,6 @@ import { db } from "@/lib/db";
 import { getInitials } from "@/lib/utils";
 import { PerfumeCard } from "@/components/perfume/perfume-card";
 
-export const revalidate = 86400;
-
 type Props = {
   params: Promise<{ slug: string }>;
 };
@@ -30,11 +28,6 @@ async function getPerfumer(slug: string) {
       _count: { select: { perfumes: true } },
     },
   });
-}
-
-export async function generateStaticParams() {
-  const perfumers = await db.perfumer.findMany({ select: { slug: true } });
-  return perfumers.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

@@ -14,8 +14,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardBody } from "@/components/ui/card";
 
-export const revalidate = 86400;
-
 type Props = {
   params: Promise<{ slug: string }>;
 };
@@ -66,13 +64,6 @@ async function getSimilarPerfumes(
     },
     take: 6,
   });
-}
-
-export async function generateStaticParams() {
-  const perfumes = await db.perfume.findMany({
-    select: { slug: true },
-  });
-  return perfumes.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

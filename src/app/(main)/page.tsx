@@ -5,8 +5,6 @@ import { Card, CardBody } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { getInitials } from "@/lib/utils";
 
-export const revalidate = 3600;
-
 const familyIcons: Record<string, string> = {
   Woody: "\ud83e\udeb5",
   Floral: "\ud83c\udf39",

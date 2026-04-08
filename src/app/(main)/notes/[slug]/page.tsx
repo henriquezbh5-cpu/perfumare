@@ -5,8 +5,6 @@ import { db } from "@/lib/db";
 import { PerfumeCard } from "@/components/perfume/perfume-card";
 import { Badge } from "@/components/ui/badge";
 
-export const revalidate = 86400;
-
 const familyIcons: Record<string, string> = {
   Woody: "\ud83e\udeb5",
   Floral: "\ud83c\udf39",
@@ -46,11 +44,6 @@ async function getNote(slug: string) {
       },
     },
   });
-}
-
-export async function generateStaticParams() {
-  const notes = await db.note.findMany({ select: { slug: true } });
-  return notes.map((n) => ({ slug: n.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
