@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { useSession, signOut } from "next-auth/react";
+import { Menu, X, User, LogOut, Settings, Search } from "lucide-react";
 import { SearchBar } from "./search-bar";
-import { ArabianDivider, ArabianBorder } from "@/components/ui/arabian-patterns";
 import { cn } from "@/lib/utils";
+import { getInitials } from "@/lib/utils";
 
 const navLinks = [
   { label: "Perfumes", href: "/perfumes" },
@@ -22,121 +23,54 @@ const navLinks = [
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const pathname = usePathname();
+  const { data: session } = useSession();
+  const userMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 10);
+    const handler = () => setScrolled(window.scrollY > 60);
     window.addEventListener("scroll", handler, { passive: true });
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
-  // Close mobile menu on route change
   useEffect(() => {
     setMobileOpen(false);
+    setUserMenuOpen(false);
+    setSearchOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
+        setUserMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 transition-shadow duration-300",
-        scrolled && "shadow-[0_2px_16px_rgba(0,0,0,0.08)]"
+        "sticky top-0 z-50 transition-all duration-500",
+        scrolled && "shadow-[0_4px_30px_rgba(0,0,0,0.5)]"
       )}
     >
-      {/* Arabesque decorative border at very top */}
-      <ArabianBorder className="bg-bark-600" color="#c9a96240" />
-
-      {/* Top bar */}
-      <div className="bg-bark-500 text-cream-300 text-xs">
-        <div className="mx-auto max-w-7xl flex items-center justify-between px-4 py-1.5">
-          <div className="flex items-center gap-2">
-            <button className="hover:text-white transition-colors px-1.5 py-0.5 rounded text-xs font-medium">
-              EN
-            </button>
-            <span className="text-bark-300">|</span>
-            <button className="hover:text-white transition-colors px-1.5 py-0.5 rounded text-xs font-medium">
-              ES
-            </button>
-          </div>
-          <div className="flex items-center gap-4">
-            <Link
-              href="/login"
-              className="hover:text-white transition-colors text-cream-300 no-underline"
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/register"
-              className="hover:text-white transition-colors text-cream-300 no-underline"
-            >
-              Register
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* Logo section */}
-      <div className="bg-cream-100 py-6">
-        <div className="mx-auto max-w-7xl px-4 text-center">
-          <p className="section-title mb-2">The Art of Arabian Perfumery</p>
-          <h1 className="text-3xl md:text-4xl font-serif text-bark-500 tracking-wide">
-            Perfumare
-          </h1>
-          <ArabianDivider className="mt-3" />
-          <div className="mt-4 max-w-md mx-auto">
-            <SearchBar />
-          </div>
-        </div>
-      </div>
-
-      {/* Navigation */}
-      <nav className="bg-white border-b border-cream-300">
+      {/* Single compact bar — always visible */}
+      <div className="bg-cream-50/80 backdrop-blur-xl border-b border-cream-300/10">
         <div className="mx-auto max-w-7xl px-4">
-          {/* Desktop nav */}
-          <ul className="hidden md:flex items-center justify-center gap-6 py-3">
-            {navLinks.map((link) => {
-              const isActive =
-                pathname === link.href ||
-                (link.href !== "/" && pathname.startsWith(link.href));
-              return (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className={cn(
-                      "text-xs font-medium uppercase tracking-widest transition-colors whitespace-nowrap no-underline relative py-1",
-                      isActive
-                        ? "text-gold-500"
-                        : "text-bark-300 hover:text-gold-500"
-                    )}
-                  >
-                    {link.label}
-                    {isActive && (
-                      <span className="absolute -bottom-3 left-0 right-0 h-0.5 bg-gold-500 rounded-full" />
-                    )}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
+          <div className="flex items-center justify-between h-14">
+            {/* Logo */}
+            <Link href="/" className="no-underline shrink-0">
+              <span className="text-xl font-serif tracking-wide text-shimmer">
+                Perfumare
+              </span>
+            </Link>
 
-          {/* Mobile hamburger */}
-          <div className="flex md:hidden items-center justify-between py-3">
-            <span className="text-xs font-medium uppercase tracking-widest text-bark-300">
-              Menu
-            </span>
-            <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="p-2 text-bark-400 hover:text-gold-500 transition-colors"
-              aria-label={mobileOpen ? "Close menu" : "Open menu"}
-            >
-              {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile dropdown */}
-        {mobileOpen && (
-          <div className="md:hidden bg-white border-t border-cream-200">
-            <ul className="mx-auto max-w-7xl px-4 py-3 space-y-1">
+            {/* Desktop nav — center */}
+            <ul className="hidden lg:flex items-center gap-5">
               {navLinks.map((link) => {
                 const isActive =
                   pathname === link.href ||
@@ -146,21 +80,119 @@ export function Header() {
                     <Link
                       href={link.href}
                       className={cn(
-                        "block text-sm font-medium py-2 px-3 rounded-md transition-colors no-underline",
+                        "text-[11px] font-medium uppercase tracking-widest transition-colors whitespace-nowrap no-underline relative py-1",
                         isActive
-                          ? "text-gold-500 bg-gold-50"
-                          : "text-bark-300 hover:text-gold-500 hover:bg-cream-50"
+                          ? "text-gold-500"
+                          : "text-bark-300 hover:text-gold-500"
                       )}
                     >
                       {link.label}
+                      {isActive && (
+                        <span className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gold-500 rounded-full" />
+                      )}
                     </Link>
                   </li>
                 );
               })}
             </ul>
+
+            {/* Right side — search + auth */}
+            <div className="flex items-center gap-3">
+              {/* Search toggle */}
+              <button
+                onClick={() => setSearchOpen(!searchOpen)}
+                className="p-2 text-bark-300 hover:text-gold-500 transition-colors"
+              >
+                <Search size={18} />
+              </button>
+
+              {/* Auth */}
+              {session?.user ? (
+                <div ref={userMenuRef} className="relative">
+                  <button
+                    onClick={() => setUserMenuOpen(!userMenuOpen)}
+                    className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+                  >
+                    <div className="w-7 h-7 rounded-full bg-gold-500/20 border border-gold-400/30 flex items-center justify-center overflow-hidden">
+                      {session.user.image ? (
+                        <img src={session.user.image} alt="" className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="text-[10px] font-medium text-gold-400">
+                          {getInitials(session.user.name ?? session.user.email ?? "U")}
+                        </span>
+                      )}
+                    </div>
+                  </button>
+                  {userMenuOpen && (
+                    <div className="absolute right-0 top-full mt-2 w-48 bg-cream-100/95 backdrop-blur-xl rounded-lg shadow-card-hover border border-cream-300/20 py-1 z-50">
+                      <Link href="/profile" className="flex items-center gap-2 px-4 py-2 text-sm text-bark-400 hover:bg-cream-200/30 no-underline">
+                        <User size={14} /> Profile
+                      </Link>
+                      <Link href="/profile?tab=settings" className="flex items-center gap-2 px-4 py-2 text-sm text-bark-400 hover:bg-cream-200/30 no-underline">
+                        <Settings size={14} /> Settings
+                      </Link>
+                      <div className="h-px bg-cream-300/20 my-1" />
+                      <button onClick={() => signOut({ callbackUrl: "/" })} className="flex items-center gap-2 px-4 py-2 text-sm text-bark-400 hover:bg-cream-200/30 w-full text-left">
+                        <LogOut size={14} /> Sign Out
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link href="/login" className="text-xs text-bark-300 hover:text-gold-500 transition-colors no-underline">
+                  Sign In
+                </Link>
+              )}
+
+              {/* Mobile hamburger */}
+              <button
+                onClick={() => setMobileOpen(!mobileOpen)}
+                className="lg:hidden p-2 text-bark-400 hover:text-gold-500 transition-colors"
+                aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              >
+                {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+              </button>
+            </div>
           </div>
-        )}
-      </nav>
+        </div>
+      </div>
+
+      {/* Search dropdown */}
+      {searchOpen && (
+        <div className="bg-cream-50/95 backdrop-blur-xl border-b border-cream-300/10">
+          <div className="mx-auto max-w-lg px-4 py-3">
+            <SearchBar />
+          </div>
+        </div>
+      )}
+
+      {/* Mobile nav dropdown */}
+      {mobileOpen && (
+        <div className="lg:hidden bg-cream-50/95 backdrop-blur-xl border-b border-cream-300/10">
+          <ul className="mx-auto max-w-7xl px-4 py-3 space-y-1">
+            {navLinks.map((link) => {
+              const isActive =
+                pathname === link.href ||
+                (link.href !== "/" && pathname.startsWith(link.href));
+              return (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className={cn(
+                      "block text-sm font-medium py-2 px-3 rounded-md transition-colors no-underline",
+                      isActive
+                        ? "text-gold-500 bg-gold-500/10"
+                        : "text-bark-300 hover:text-gold-500 hover:bg-cream-200/20"
+                    )}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
     </header>
   );
 }

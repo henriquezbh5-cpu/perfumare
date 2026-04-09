@@ -85,14 +85,13 @@ export function Footer() {
                   type="email"
                   placeholder="Your email"
                   className="flex-1 rounded-md bg-bark-400 border border-bark-300 px-3 py-2 text-sm text-cream-200 placeholder:text-cream-600 focus:outline-none focus:ring-1 focus:ring-gold-400"
-                  disabled
                 />
-                <Button size="sm" className="shrink-0" disabled>
+                <Button size="sm" className="shrink-0">
                   Subscribe
                 </Button>
               </div>
               <p className="text-[10px] text-cream-600 mt-1.5">
-                Coming soon
+                No spam. Unsubscribe anytime.
               </p>
             </div>
 

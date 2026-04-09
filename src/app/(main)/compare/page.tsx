@@ -137,14 +137,14 @@ function CompareSearch({
           value={query}
           onChange={(e) => handleChange(e.target.value)}
           placeholder="Search for a perfume..."
-          className="w-full rounded-lg border border-cream-400 bg-white pl-9 pr-4 py-3 text-sm text-bark-500 placeholder:text-cream-500 focus:outline-none focus:ring-2 focus:ring-gold-400 focus:border-gold-400 transition-colors"
+          className="w-full rounded-lg border border-cream-400/20 bg-cream-200/30 backdrop-blur-sm pl-9 pr-4 py-3 text-sm text-bark-500 placeholder:text-cream-500 focus:outline-none focus:ring-2 focus:ring-gold-400 focus:border-gold-400 transition-colors"
         />
         {loading && (
           <div className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 border-2 border-gold-400 border-t-transparent rounded-full animate-spin" />
         )}
       </div>
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-cream-300 rounded-lg shadow-card-hover z-50 max-h-60 overflow-y-auto">
+        <div className="absolute top-full left-0 right-0 mt-1 bg-cream-100/95 backdrop-blur-xl border border-cream-300/20 rounded-lg shadow-card-hover z-50 max-h-60 overflow-y-auto">
           {results.map((item) => (
             <button
               key={item.slug}

@@ -26,7 +26,7 @@ export function WhereToBuy({ links, className }: WhereToBuyProps) {
             href={link.url}
             target="_blank"
             rel="nofollow noopener noreferrer"
-            className="flex items-center justify-between p-3 bg-white border border-cream-300 rounded-lg hover:shadow-card-hover transition-shadow no-underline group"
+            className="flex items-center justify-between p-3 bg-cream-200/30 backdrop-blur-sm border border-cream-300/20 rounded-lg hover:shadow-card-hover transition-shadow no-underline group"
           >
             <span className="text-sm font-medium text-bark-400">
               {link.retailer}

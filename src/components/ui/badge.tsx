@@ -9,11 +9,11 @@ interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 
 const variantStyles: Record<BadgeVariant, string> = {
   default:
-    "bg-gold-100 border border-cream-400 text-gold-500",
+    "bg-gold-500/10 border border-gold-500/20 text-gold-500 backdrop-blur-sm",
   gold:
-    "bg-gold-500 text-white border border-gold-500",
+    "bg-gradient-to-r from-gold-500 to-gold-400 text-cream-50 border border-gold-400/30",
   arabian:
-    "bg-bark-500 text-gold-400 border border-bark-500",
+    "bg-cream-200/30 text-gold-400 border border-cream-300/20 backdrop-blur-sm",
 };
 
 export function Badge({ className, variant = "default", ...props }: BadgeProps) {

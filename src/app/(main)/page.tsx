@@ -46,6 +46,8 @@ export default async function HomePage() {
     noteCount,
     perfumerCount,
     topPerfumers,
+    latestReviews,
+    topRatedPerfumes,
   ] = await Promise.all([
     // Fragrance of the Day
     db.perfume.findFirst({
@@ -109,6 +111,29 @@ export default async function HomePage() {
       take: 4,
       orderBy: { perfumes: { _count: "desc" } },
       include: { _count: { select: { perfumes: true } } },
+    }),
+    // Latest reviews
+    db.review.findMany({
+      take: 4,
+      orderBy: { createdAt: "desc" },
+      include: {
+        user: { select: { name: true, username: true, image: true } },
+        perfume: { select: { name: true, slug: true, brand: { select: { name: true } } } },
+      },
+    }),
+    // Top rated — perfumes with most votes
+    db.perfume.findMany({
+      take: 4,
+      orderBy: { votes: { _count: "desc" } },
+      include: {
+        brand: true,
+        accords: {
+          include: { accord: true },
+          orderBy: { intensity: "desc" },
+          take: 3,
+        },
+        _count: { select: { reviews: true, votes: true } },
+      },
     }),
   ]);
 
@@ -232,16 +257,17 @@ export default async function HomePage() {
                 <div
                   className="aspect-[3/4] md:aspect-auto flex items-center justify-center overflow-hidden relative"
                   style={{
-                    background: featuredPerfume.imageUrl
-                      ? undefined
+                    background: featuredPerfume.imageUrl && featuredPerfume.imageUrl.startsWith("http")
+                      ? `linear-gradient(135deg, #faf8f4, #f5f0e8)`
                       : `linear-gradient(135deg, ${featuredAccordColor}18, ${featuredAccordColor}08, #f5f0e8)`,
                   }}
                 >
-                  {featuredPerfume.imageUrl ? (
+                  {featuredPerfume.imageUrl && featuredPerfume.imageUrl.startsWith("http") ? (
                     <img
                       src={featuredPerfume.imageUrl}
                       alt={featuredPerfume.name}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      loading="lazy"
+                      className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-105 drop-shadow-lg"
                     />
                   ) : (
                     <div className="py-12">
@@ -252,7 +278,7 @@ export default async function HomePage() {
                     </div>
                   )}
                 </div>
-                <div className="bg-white p-8 flex flex-col justify-center gap-4">
+                <div className="bg-cream-200/30 backdrop-blur-sm p-8 flex flex-col justify-center gap-4">
                   <div>
                     <p className="section-title mb-1">
                       {featuredPerfume.brand.name}
@@ -410,7 +436,7 @@ export default async function HomePage() {
                 href={`/notes?family=${encodeURIComponent(nf.family)}`}
                 className="no-underline"
               >
-                <div className="flex items-center gap-2 px-4 py-2.5 bg-white border border-cream-300 rounded-full hover:shadow-card-hover hover:border-gold-300 transition-all duration-200 cursor-pointer group">
+                <div className="flex items-center gap-2 px-4 py-2.5 bg-cream-200/30 backdrop-blur-sm border border-cream-300/20 rounded-full hover:shadow-card-hover hover:border-gold-300 transition-all duration-200 cursor-pointer group">
                   <span className="text-lg">
                     {familyIcons[nf.family] ?? "\ud83c\udf3f"}
                   </span>
@@ -523,31 +549,70 @@ export default async function HomePage() {
         <p className="text-sm text-cream-500 text-center mb-6">
           What the community is saying
         </p>
-        <Card>
-          <CardBody className="text-center py-12">
-            <MessageSquare
-              size={40}
-              className="mx-auto mb-4 text-cream-400"
-              strokeWidth={1.2}
-            />
-            <p className="text-cream-500 mb-2 text-lg font-serif">
-              Coming soon
-            </p>
-            <p className="text-sm text-cream-500">
-              Be the first to review a fragrance and share your experience with
-              the community!
-            </p>
-            <Link
-              href="/perfumes"
-              className="no-underline inline-block mt-4 text-sm text-gold-500 font-medium hover:text-gold-600 transition-colors"
-            >
-              Browse perfumes to review &rarr;
-            </Link>
-          </CardBody>
-        </Card>
+        {latestReviews.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto">
+            {latestReviews.map((review) => (
+              <Link
+                key={review.id}
+                href={`/perfumes/${review.perfume.slug}`}
+                className="no-underline group"
+              >
+                <Card hover>
+                  <CardBody className="space-y-3">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h4 className="font-serif text-bark-500 text-sm group-hover:text-gold-600 transition-colors">
+                          {review.title}
+                        </h4>
+                        <p className="text-xs text-cream-500">
+                          {review.perfume.brand.name} &middot; {review.perfume.name}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Star size={14} className="text-gold-500 fill-gold-500" />
+                        <span className="text-sm font-medium text-bark-400">{review.rating}</span>
+                      </div>
+                    </div>
+                    <p className="text-sm text-bark-300 line-clamp-2">{review.body}</p>
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-full bg-bark-500 text-gold-400 flex items-center justify-center text-[10px] font-serif">
+                        {getInitials(review.user.name ?? "U")}
+                      </div>
+                      <span className="text-xs text-cream-500">
+                        {review.user.name ?? review.user.username ?? "Anonymous"}
+                      </span>
+                    </div>
+                  </CardBody>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <Card>
+            <CardBody className="text-center py-12">
+              <MessageSquare
+                size={40}
+                className="mx-auto mb-4 text-cream-400"
+                strokeWidth={1.2}
+              />
+              <p className="text-cream-500 mb-2 text-lg font-serif">
+                Be the first to review
+              </p>
+              <p className="text-sm text-cream-500">
+                Share your experience with the community!
+              </p>
+              <Link
+                href="/perfumes"
+                className="no-underline inline-block mt-4 text-sm text-gold-500 font-medium hover:text-gold-600 transition-colors"
+              >
+                Browse perfumes to review &rarr;
+              </Link>
+            </CardBody>
+          </Card>
+        )}
       </section>
 
-      {/* Top Rated placeholder */}
+      {/* Top Rated */}
       <section>
         <div className="flex items-center justify-between mb-6">
           <div>
@@ -557,28 +622,52 @@ export default async function HomePage() {
             </p>
           </div>
           <Link
-            href="/perfumes?sort=rating"
+            href="/perfumes"
             className="text-sm text-gold-500 no-underline hover:text-gold-600 font-medium"
           >
             View all &rarr;
           </Link>
         </div>
-        <Card>
-          <CardBody className="text-center py-12">
-            <Star
-              size={40}
-              className="mx-auto mb-4 text-cream-400"
-              strokeWidth={1.2}
-            />
-            <p className="text-cream-500 mb-2 text-lg font-serif">
-              Ratings coming soon
-            </p>
-            <p className="text-sm text-cream-500">
-              Once our community starts rating fragrances, the top picks will
-              appear here.
-            </p>
-          </CardBody>
-        </Card>
+        {topRatedPerfumes.length > 0 ? (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {topRatedPerfumes.map((p) => {
+              const topAccords = p.accords.map((a) => ({
+                name: a.accord.name,
+                color: a.accord.color,
+              }));
+              return (
+                <PerfumeCard
+                  key={p.id}
+                  slug={p.slug}
+                  name={p.name}
+                  brand={p.brand.name}
+                  year={p.year}
+                  concentration={p.concentration}
+                  imageUrl={p.imageUrl}
+                  rating={0}
+                  reviewCount={p._count.reviews}
+                  topAccords={topAccords}
+                />
+              );
+            })}
+          </div>
+        ) : (
+          <Card>
+            <CardBody className="text-center py-12">
+              <Star
+                size={40}
+                className="mx-auto mb-4 text-cream-400"
+                strokeWidth={1.2}
+              />
+              <p className="text-cream-500 mb-2 text-lg font-serif">
+                Ratings coming soon
+              </p>
+              <p className="text-sm text-cream-500">
+                Once our community starts rating, the top picks will appear here.
+              </p>
+            </CardBody>
+          </Card>
+        )}
       </section>
     </div>
   );

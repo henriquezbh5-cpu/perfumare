@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Cormorant_Garamond } from "next/font/google";
+import { Providers } from "./providers";
+import { AnimatedBackground } from "@/components/ui/animated-background";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -34,7 +36,14 @@ export default function RootLayout({
       lang="en"
       className={`h-full antialiased ${playfair.variable} ${cormorant.variable}`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <AnimatedBackground />
+        <Providers>
+          <div className="relative z-10 flex flex-col min-h-full">
+            {children}
+          </div>
+        </Providers>
+      </body>
     </html>
   );
 }

@@ -144,7 +144,7 @@ export default function FinderPage() {
                   "flex flex-col items-center gap-3 p-6 rounded-xl border-2 transition-all duration-200 cursor-pointer",
                   gender === g.key
                     ? "border-gold-500 bg-gold-50 shadow-card-hover"
-                    : "border-cream-300 bg-white hover:border-gold-300 hover:shadow-card"
+                    : "border-cream-300/20 bg-cream-200/20 hover:border-gold-300 hover:shadow-card"
                 )}
               >
                 <span className="text-4xl">{g.emoji}</span>
@@ -182,7 +182,7 @@ export default function FinderPage() {
                   "flex items-center gap-2 px-4 py-2.5 rounded-full border-2 transition-all duration-200 cursor-pointer text-sm font-medium",
                   families.includes(sf.key)
                     ? "border-gold-500 bg-gold-50 text-gold-600 shadow-card"
-                    : "border-cream-300 bg-white text-bark-400 hover:border-gold-300"
+                    : "border-cream-300/20 bg-cream-200/20 text-bark-400 hover:border-gold-300"
                 )}
               >
                 <span>{sf.emoji}</span>
@@ -220,7 +220,7 @@ export default function FinderPage() {
                   "flex flex-col items-center gap-2 p-6 rounded-xl border-2 transition-all duration-200 cursor-pointer",
                   occasion === o.key
                     ? "border-gold-500 bg-gold-50 shadow-card-hover"
-                    : "border-cream-300 bg-white hover:border-gold-300 hover:shadow-card"
+                    : "border-cream-300/20 bg-cream-200/20 hover:border-gold-300 hover:shadow-card"
                 )}
               >
                 <span className="text-3xl">{o.emoji}</span>

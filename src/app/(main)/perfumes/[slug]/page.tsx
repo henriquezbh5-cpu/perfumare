@@ -3,18 +3,22 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { db } from "@/lib/db";
 import { getInitials } from "@/lib/utils";
+import { TransparentImage } from "@/components/ui/transparent-image";
 import { AccordBars } from "@/components/perfume/accord-bars";
 import { NotesPyramid } from "@/components/perfume/notes-pyramid";
-import { PerformanceVotes } from "@/components/perfume/performance-votes";
-import { SeasonTime } from "@/components/perfume/season-time";
 import { WhereToBuy } from "@/components/perfume/where-to-buy";
 import { PerfumeCard } from "@/components/perfume/perfume-card";
+import {
+  PerfumeWardrobeSection,
+  PerfumeReviewButton,
+  PerfumeReviewSectionButton,
+  PerfumePerformanceSection,
+} from "@/components/perfume/perfume-interactions";
 import { Rating } from "@/components/ui/rating";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardBody } from "@/components/ui/card";
 import { PerfumeBottleSvg } from "@/components/ui/perfume-bottle-svg";
-import { Star, PenLine } from "lucide-react";
+import { Star } from "lucide-react";
 import { ArabianDivider, ArabianCorner } from "@/components/ui/arabian-patterns";
 
 type Props = {
@@ -122,12 +126,21 @@ export default async function PerfumeDetailPage({ params }: Props) {
     intensity: a.intensity,
   }));
 
-  const affiliateLinks = perfume.affiliateLinks.map((l) => ({
-    retailer: l.retailer,
-    url: l.url,
-    price: l.price?.toString() ?? null,
-    currency: l.currency,
-  }));
+  const affiliateLinks = perfume.affiliateLinks.length > 0
+    ? perfume.affiliateLinks.map((l) => ({
+        retailer: l.retailer,
+        url: l.url,
+        price: l.price?.toString() ?? null,
+        currency: l.currency,
+      }))
+    : [
+        {
+          retailer: "Amazon",
+          url: `https://www.amazon.com/s?k=${encodeURIComponent(`${perfume.brand.name} ${perfume.name} ${perfume.concentration}`)}&tag=${process.env.NEXT_PUBLIC_AMAZON_TAG ?? "perfumare-20"}`,
+          price: null,
+          currency: "USD",
+        },
+      ];
 
   const mainAccordColor =
     perfume.accords.sort((a, b) => b.intensity - a.intensity)[0]?.accord
@@ -161,43 +174,29 @@ export default async function PerfumeDetailPage({ params }: Props) {
         <span className="text-bark-400">{perfume.name}</span>
       </nav>
 
-      {/* Hero Section with gradient background */}
-      <div className="relative -mx-4 px-4">
-        <div
-          className="absolute inset-0 -z-10 rounded-2xl"
-          style={{
-            background: `linear-gradient(135deg, ${mainAccordColor}08, ${mainAccordColor}04, transparent)`,
-          }}
-        />
-        {/* Subtle arabesque corner decorations */}
-        <ArabianCorner
-          className="absolute top-2 left-2 opacity-20"
-          color={mainAccordColor}
-          size={50}
-        />
-        <ArabianCorner
-          className="absolute bottom-2 right-2 opacity-20 rotate-180"
-          color={mainAccordColor}
-          size={50}
-        />
+      {/* Hero Section */}
+      <div className="relative">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 py-6">
-          {/* Image */}
-          <div
-            className="aspect-[3/4] rounded-xl flex items-center justify-center overflow-hidden border border-cream-200"
-            style={{
-              background: perfume.imageUrl
-                ? undefined
-                : `linear-gradient(160deg, ${mainAccordColor}12, ${mainAccordColor}06, #faf8f4)`,
-            }}
-          >
-            {perfume.imageUrl ? (
-              <img
+          {/* Image — transparent bg via canvas proxy */}
+          <div className="aspect-[3/4] rounded-xl flex items-center justify-center relative group/img">
+            {/* Subtle glow behind */}
+            <div
+              className="absolute inset-0 opacity-30 group-hover/img:opacity-50 transition-opacity duration-1000 blur-2xl"
+              style={{
+                background: `radial-gradient(circle at 50% 50%, ${mainAccordColor}30, transparent 60%)`,
+              }}
+            />
+
+            {perfume.imageUrl && perfume.imageUrl.startsWith("http") ? (
+              <TransparentImage
                 src={perfume.imageUrl}
                 alt={perfume.name}
-                className="w-full h-full object-cover"
+                className="relative z-10 w-full h-full object-contain p-6 transition-all duration-700 ease-out group-hover/img:scale-105 group-hover/img:-translate-y-2"
               />
             ) : (
-              <PerfumeBottleSvg color={mainAccordColor} size="lg" />
+              <div className="relative z-10 transition-all duration-500 group-hover/img:scale-105 group-hover/img:-translate-y-2">
+                <PerfumeBottleSvg color={mainAccordColor} size="lg" />
+              </div>
             )}
           </div>
 
@@ -235,36 +234,14 @@ export default async function PerfumeDetailPage({ params }: Props) {
             )}
 
             {/* Wardrobe buttons */}
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                className="hover:bg-gold-50 transition-colors"
-              >
-                Have
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="hover:bg-gold-50 transition-colors"
-              >
-                Want
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="hover:bg-cream-100 transition-colors"
-              >
-                Had
-              </Button>
-            </div>
+            <PerfumeWardrobeSection perfumeId={perfume.id} />
 
             {/* Rating summary — more prominent */}
             <div
               className="rounded-xl p-6 border"
               style={{
-                background: `linear-gradient(135deg, ${mainAccordColor}06, white)`,
-                borderColor: `${mainAccordColor}20`,
+                background: `linear-gradient(135deg, ${mainAccordColor}08, rgba(15,15,24,0.5))`,
+                borderColor: `${mainAccordColor}15`,
               }}
             >
               <div className="flex items-center gap-6">
@@ -289,13 +266,10 @@ export default async function PerfumeDetailPage({ params }: Props) {
                   <p className="text-sm text-bark-300 mb-3">
                     Share your experience
                   </p>
-                  <Button
-                    size="lg"
-                    className="w-full gap-2"
-                  >
-                    <PenLine size={16} />
-                    Write a Review
-                  </Button>
+                  <PerfumeReviewButton
+                    perfumeId={perfume.id}
+                    perfumeName={perfume.name}
+                  />
                 </div>
               </div>
             </div>
@@ -321,19 +295,11 @@ export default async function PerfumeDetailPage({ params }: Props) {
 
       <ArabianDivider />
 
-      {/* Performance */}
-      <PerformanceVotes
-        longevity={7.5}
-        sillage="Strong"
-        priceValue={4.2}
-      />
-
-      {/* Season & Time */}
+      {/* Performance + Season/Time (live from API) */}
       <section>
-        <h3 className="section-title mb-6 text-center">When to Wear</h3>
-        <SeasonTime
-          season={{ spring: 15, summer: 5, fall: 45, winter: 35 }}
-          time={{ day: 25, night: 75 }}
+        <PerfumePerformanceSection
+          perfumeId={perfume.id}
+          perfumeName={perfume.name}
         />
       </section>
 
@@ -348,10 +314,10 @@ export default async function PerfumeDetailPage({ params }: Props) {
           <h3 className="section-title">
             Reviews ({perfume._count.reviews})
           </h3>
-          <Button size="md" className="gap-2">
-            <PenLine size={14} />
-            Write a Review
-          </Button>
+          <PerfumeReviewSectionButton
+            perfumeId={perfume.id}
+            perfumeName={perfume.name}
+          />
         </div>
 
         {perfume.reviews.length > 0 ? (

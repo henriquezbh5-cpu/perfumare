@@ -96,7 +96,7 @@ export function SearchBar({ className }: { className?: string }) {
           value={query}
           onChange={(e) => handleChange(e.target.value)}
           placeholder="Search perfumes, brands, notes..."
-          className="w-full rounded-full border border-cream-400 bg-white pl-9 pr-4 py-2 text-sm text-bark-500 placeholder:text-cream-500 focus:outline-none focus:ring-2 focus:ring-gold-400 focus:border-gold-400 transition-colors"
+          className="w-full rounded-full border border-cream-400/20 bg-cream-200/30 backdrop-blur-sm pl-9 pr-4 py-2 text-sm text-bark-500 placeholder:text-cream-500 focus:outline-none focus:ring-2 focus:ring-gold-400 focus:border-gold-400 transition-colors"
         />
         {loading && (
           <div className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 border-2 border-gold-400 border-t-transparent rounded-full animate-spin" />
@@ -104,7 +104,7 @@ export function SearchBar({ className }: { className?: string }) {
       </div>
 
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-cream-300 rounded-lg shadow-card-hover z-50 max-h-80 overflow-y-auto">
+        <div className="absolute top-full left-0 right-0 mt-1 bg-cream-100/95 backdrop-blur-xl border border-cream-300/20 rounded-lg shadow-card-hover z-50 max-h-80 overflow-y-auto">
           {Object.entries(grouped).map(([type, items]) => (
             <div key={type}>
               <div className="px-3 py-1.5 text-xs font-medium uppercase tracking-wider text-cream-500 bg-cream-50">
