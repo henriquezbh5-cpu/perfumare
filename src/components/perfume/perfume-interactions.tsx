@@ -116,12 +116,18 @@ export function PerfumePerformanceSection({
 
       {isLoading ? (
         <p className="text-center text-bark-200 py-4">Loading performance data...</p>
-      ) : (
+      ) : aggregated?.totalVotes && aggregated.totalVotes > 0 ? (
         <PerformanceVotes
           longevity={aggregated?.longevity ?? 0}
           sillage={topSillage}
           priceValue={aggregated?.priceValue ?? 0}
         />
+      ) : (
+        <div className="text-center py-6 rounded-xl border border-cream-300/10 bg-cream-100/5">
+          <BarChart3 size={28} className="mx-auto mb-2 text-cream-400" strokeWidth={1.2} />
+          <p className="text-sm text-cream-500 mb-1">No votes yet</p>
+          <p className="text-xs text-cream-600">Be the first to rate this fragrance&apos;s performance</p>
+        </div>
       )}
 
       {/* Season & Time from aggregation */}

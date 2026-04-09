@@ -356,21 +356,16 @@ export default async function PerfumeDetailPage({ params }: Props) {
             ))}
           </div>
         ) : (
-          <Card>
-            <CardBody className="text-center py-10">
-              <Star
-                size={32}
-                className="mx-auto mb-3 text-cream-400"
-                strokeWidth={1.2}
-              />
-              <p className="text-cream-500 mb-1 font-serif text-lg">
-                No reviews yet
-              </p>
-              <p className="text-sm text-cream-500">
-                Be the first to review this fragrance and help others decide!
-              </p>
-            </CardBody>
-          </Card>
+          <div className="text-center py-6 rounded-xl border border-cream-300/10 bg-cream-100/5">
+            <Star
+              size={24}
+              className="mx-auto mb-2 text-cream-400"
+              strokeWidth={1.2}
+            />
+            <p className="text-sm text-cream-500">
+              No reviews yet — be the first to share your experience
+            </p>
+          </div>
         )}
       </section>
 
