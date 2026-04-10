@@ -20,6 +20,8 @@ import { Card, CardBody } from "@/components/ui/card";
 import { PerfumeBottleSvg } from "@/components/ui/perfume-bottle-svg";
 import { Star } from "lucide-react";
 import { ArabianDivider, ArabianCorner } from "@/components/ui/arabian-patterns";
+import { RatingHistogram } from "@/components/perfume/rating-histogram";
+import { VotableNotes } from "@/components/perfume/votable-notes";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -281,7 +283,7 @@ export default async function PerfumeDetailPage({ params }: Props) {
               }}
             >
               <div className="flex items-center gap-6">
-                <div className="text-center">
+                <div className="text-center shrink-0">
                   <div className="text-5xl font-serif text-bark-500 mb-1">
                     {perfume.reviews.length > 0
                       ? avgRating.toFixed(1)
@@ -298,15 +300,21 @@ export default async function PerfumeDetailPage({ params }: Props) {
                     {perfume._count.reviews === 1 ? "review" : "reviews"}
                   </p>
                 </div>
-                <div className="flex-1 border-l border-cream-200 pl-6">
-                  <p className="text-sm text-bark-300 mb-3">
-                    Share your experience
-                  </p>
-                  <PerfumeReviewButton
-                    perfumeId={perfume.id}
-                    perfumeName={perfume.name}
-                  />
-                </div>
+                {perfume.reviews.length > 0 ? (
+                  <div className="flex-1 border-l border-cream-200/20 pl-6">
+                    <RatingHistogram reviews={perfume.reviews} />
+                  </div>
+                ) : (
+                  <div className="flex-1 border-l border-cream-200/20 pl-6">
+                    <p className="text-sm text-bark-300 mb-3">
+                      Share your experience
+                    </p>
+                    <PerfumeReviewButton
+                      perfumeId={perfume.id}
+                      perfumeName={perfume.name}
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -326,8 +334,19 @@ export default async function PerfumeDetailPage({ params }: Props) {
 
       <ArabianDivider />
 
-      {/* Notes Pyramid */}
-      <NotesPyramid top={topNotes} heart={heartNotes} base={baseNotes} />
+      {/* Notes — Votable */}
+      {perfume.notes.length > 0 && (
+        <VotableNotes
+          perfumeId={perfume.id}
+          notes={perfume.notes.map((n) => ({
+            name: n.note.name,
+            slug: n.note.slug,
+            layer: n.layer,
+            voteCount: n.voteCount,
+            noteId: n.noteId,
+          }))}
+        />
+      )}
 
       <ArabianDivider />
 
@@ -404,6 +423,22 @@ export default async function PerfumeDetailPage({ params }: Props) {
           </div>
         )}
       </section>
+
+      {/* Inspired By / Dupe info */}
+      {perfume.inspiredBy && (
+        <section>
+          <h3 className="section-title mb-3">Inspired By</h3>
+          <div className="rounded-xl border border-cream-300/10 bg-cream-100/5 p-4 flex items-start gap-3">
+            <span className="text-xl">💡</span>
+            <div>
+              <p className="text-sm text-bark-300">
+                This fragrance is commonly compared to <strong className="text-bark-400">{perfume.inspiredBy}</strong>.
+                Many enthusiasts consider it an excellent alternative at a more accessible price point.
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Similar Perfumes */}
       {similarPerfumes.length > 0 && (

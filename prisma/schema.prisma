@@ -119,6 +119,7 @@ model Perfume {
   year           Int?
   concentration  String          @default("EDP")
   imageUrl       String?
+  inspiredBy     String?
   brandId        String
   perfumerId     String?
   createdAt      DateTime        @default(now())
