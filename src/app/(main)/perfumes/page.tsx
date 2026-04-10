@@ -71,7 +71,6 @@ export default async function PerfumesCatalogPage({ searchParams }: Props) {
     db.perfume.groupBy({
       by: ["concentration"],
       _count: { _all: true },
-      orderBy: { concentration: "asc" },
     }),
   ]);
 
