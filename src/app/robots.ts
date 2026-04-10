@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/admin/", "/api/", "/profile"],
       },
     ],
-    sitemap: "https://perfumare.com/sitemap.xml",
+    sitemap: "https://perfumare-jade.vercel.app/sitemap.xml",
   };
 }

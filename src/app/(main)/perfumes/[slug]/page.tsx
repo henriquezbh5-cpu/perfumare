@@ -81,11 +81,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: "Perfume Not Found" };
   }
 
+  const description = perfume.description ??
+    `Discover ${perfume.name} by ${perfume.brand.name}. Read reviews, see notes, accords and performance data.`;
+
   return {
-    title: `${perfume.name} by ${perfume.brand.name} | Perfumare`,
-    description:
-      perfume.description ??
-      `Discover ${perfume.name} by ${perfume.brand.name}. Read reviews, see notes, accords and performance data.`,
+    title: `${perfume.name} by ${perfume.brand.name}`,
+    description,
+    openGraph: {
+      title: `${perfume.name} by ${perfume.brand.name}`,
+      description,
+      type: "website",
+      ...(perfume.imageUrl ? { images: [{ url: perfume.imageUrl, width: 400, height: 500 }] } : {}),
+    },
+    twitter: {
+      card: "summary",
+      title: `${perfume.name} by ${perfume.brand.name}`,
+      description,
+    },
   };
 }
 
@@ -146,8 +158,32 @@ export default async function PerfumeDetailPage({ params }: Props) {
     perfume.accords.sort((a, b) => b.intensity - a.intensity)[0]?.accord
       ?.color ?? "#c9a962";
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: `${perfume.name} by ${perfume.brand.name}`,
+    description: perfume.description ?? undefined,
+    brand: { "@type": "Brand", name: perfume.brand.name },
+    ...(perfume.imageUrl ? { image: perfume.imageUrl } : {}),
+    ...(perfume.reviews.length > 0
+      ? {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: avgRating.toFixed(1),
+            reviewCount: perfume.reviews.length,
+            bestRating: 5,
+            worstRating: 1,
+          },
+        }
+      : {}),
+  };
+
   return (
     <div className="space-y-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Breadcrumb */}
       <nav className="text-sm text-cream-500">
         <Link

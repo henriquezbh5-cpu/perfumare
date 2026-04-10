@@ -55,7 +55,7 @@ export function PerformanceVotes({
   return (
     <section className={cn("", className)}>
       <h3 className="section-title mb-6 text-center">Performance</h3>
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
         <Metric
           label="Longevity"
           value={longevity}

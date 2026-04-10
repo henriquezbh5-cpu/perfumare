@@ -17,6 +17,8 @@ const cormorant = Cormorant_Garamond({
   display: "swap",
 });
 
+const siteUrl = "https://perfumare-jade.vercel.app";
+
 export const metadata: Metadata = {
   title: {
     template: "%s | Perfumare",
@@ -24,6 +26,24 @@ export const metadata: Metadata = {
   },
   description:
     "Discover, compare, and review thousands of perfumes. Where ancient traditions meet modern luxury. The ultimate fragrance encyclopedia.",
+  metadataBase: new URL(siteUrl),
+  openGraph: {
+    type: "website",
+    siteName: "Perfumare",
+    title: "Perfumare — The Art of Arabian Perfumery",
+    description: "Discover, compare, and review thousands of perfumes. Where ancient traditions meet modern luxury.",
+    url: siteUrl,
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Perfumare — The Art of Arabian Perfumery",
+    description: "Discover, compare, and review thousands of perfumes. Where ancient traditions meet modern luxury.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({

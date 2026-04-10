@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
   if (!article) return { title: "Article Not Found" };
   return {
-    title: `${article.title} | Magazine | Perfumare`,
+    title: `${article.title} | Magazine`,
     description: article.excerpt ?? undefined,
   };
 }

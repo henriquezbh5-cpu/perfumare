@@ -8,7 +8,7 @@ import { Prisma } from "@prisma/client";
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
-  title: "All Perfumes | Perfumare",
+  title: "All Perfumes ",
   description:
     "Browse our complete catalog of perfumes. Filter by gender, sort by name or year.",
 };

@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { BookOpen } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Magazine | Perfumare",
+  title: "Magazine ",
   description: "Expert articles, reviews, guides, and interviews from the world of perfumery.",
 };
 

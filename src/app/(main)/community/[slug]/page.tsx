@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const category = await db.forumCategory.findUnique({ where: { slug } });
   if (!category) return { title: "Category Not Found" };
-  return { title: `${category.name} | Community | Perfumare` };
+  return { title: `${category.name} | Community` };
 }
 
 export default async function CategoryPage({ params }: Props) {

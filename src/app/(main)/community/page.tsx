@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { MessageSquare, Users, ChevronRight } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Community | Perfumare",
+  title: "Community ",
   description: "Join the Perfumare community. Discuss fragrances, share recommendations, and connect with perfume enthusiasts.",
 };
 

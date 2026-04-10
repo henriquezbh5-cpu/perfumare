@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { Badge } from "@/components/ui/badge";
 
 export const metadata: Metadata = {
-  title: "Fragrance Notes | Perfumare",
+  title: "Fragrance Notes ",
   description:
     "Explore all fragrance notes organized by family. Discover woody, floral, oriental, fresh, spicy, citrus, gourmand and more.",
 };

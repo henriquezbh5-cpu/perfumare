@@ -5,7 +5,7 @@ import { Card, CardBody } from "@/components/ui/card";
 import { getInitials } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "Perfumers | Perfumare",
+  title: "Perfumers ",
   description:
     "Discover the master perfumers and nose creators behind your favorite fragrances.",
 };

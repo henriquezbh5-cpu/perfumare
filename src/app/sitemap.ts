@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { db } from "@/lib/db";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://perfumare.com";
+  const baseUrl = "https://perfumare-jade.vercel.app";
 
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [

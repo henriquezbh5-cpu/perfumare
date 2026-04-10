@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     select: { title: true },
   });
   if (!thread) return { title: "Thread Not Found" };
-  return { title: `${thread.title} | Community | Perfumare` };
+  return { title: `${thread.title} | Community` };
 }
 
 export default async function ThreadPage({ params }: Props) {
