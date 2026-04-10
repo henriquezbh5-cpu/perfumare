@@ -16,6 +16,7 @@ const navLinks = [
   { label: "Perfumers", href: "/perfumers" },
   { label: "Finder", href: "/finder" },
   { label: "Compare", href: "/compare" },
+  { label: "Best Of", href: "/best" },
   { label: "Community", href: "/community" },
   { label: "Magazine", href: "/magazine" },
 ];

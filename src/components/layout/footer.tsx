@@ -17,7 +17,7 @@ const columns = [
     links: [
       { label: "Finder", href: "/finder" },
       { label: "Compare", href: "/compare" },
-      { label: "Top Rated", href: "/perfumes?sort=rating" },
+      { label: "Best Perfumes", href: "/best" },
       { label: "New Releases", href: "/perfumes?sort=newest" },
     ],
   },
@@ -37,6 +37,7 @@ const columns = [
       { label: "Contact", href: "/contact" },
       { label: "Privacy Policy", href: "/privacy" },
       { label: "Terms of Use", href: "/terms" },
+      { label: "Affiliate Disclosure", href: "/affiliate-disclosure" },
     ],
   },
 ];
