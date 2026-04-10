@@ -158,7 +158,7 @@ export default async function PerfumesCatalogPage({ searchParams }: Props) {
           ))}
         </div>
 
-        {/* Brand filter (dropdown-style) */}
+        {/* Brand filter */}
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-xs uppercase tracking-widest text-cream-500 mr-2">
             Brand:
@@ -167,23 +167,19 @@ export default async function PerfumesCatalogPage({ searchParams }: Props) {
             <Badge variant={!brandSlug ? "gold" : "default"}>All</Badge>
           </Link>
           {brandSlug && (
-            <Badge variant="gold">
-              {brands.find((b) => b.slug === brandSlug)?.name ?? brandSlug}
-            </Badge>
+            <Link href={buildUrl({ brand: undefined })} className="no-underline">
+              <Badge variant="gold">
+                {brands.find((b) => b.slug === brandSlug)?.name ?? brandSlug} ✕
+              </Badge>
+            </Link>
           )}
-          {!brandSlug && (
-            <select
-              onChange={(e) => {
-                if (e.target.value) window.location.href = buildUrl({ brand: e.target.value });
-              }}
-              className="bg-cream-100/20 border border-cream-300/20 rounded-lg px-2 py-1 text-xs text-bark-400 focus:outline-none focus:border-gold-500/30"
-              defaultValue=""
-            >
-              <option value="">Select brand...</option>
-              {brands.map((b) => (
-                <option key={b.slug} value={b.slug}>{b.name}</option>
-              ))}
-            </select>
+          {!brandSlug && brands.slice(0, 10).map((b) => (
+            <Link key={b.slug} href={buildUrl({ brand: b.slug })} className="no-underline">
+              <Badge variant="default">{b.name}</Badge>
+            </Link>
+          ))}
+          {!brandSlug && brands.length > 10 && (
+            <span className="text-xs text-cream-600">+{brands.length - 10} more</span>
           )}
         </div>
 
