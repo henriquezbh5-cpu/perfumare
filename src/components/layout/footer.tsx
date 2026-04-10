@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { ArabianBorder, ArabianStar } from "@/components/ui/arabian-patterns";
+import { NewsletterForm } from "./newsletter-form";
 
 const columns = [
   {
@@ -80,19 +80,7 @@ export function Footer() {
               <p className="text-xs text-cream-500 mb-3">
                 Get weekly fragrance picks and reviews
               </p>
-              <div className="flex gap-2">
-                <input
-                  type="email"
-                  placeholder="Your email"
-                  className="flex-1 rounded-md bg-bark-400 border border-bark-300 px-3 py-2 text-sm text-cream-200 placeholder:text-cream-600 focus:outline-none focus:ring-1 focus:ring-gold-400"
-                />
-                <Button size="sm" className="shrink-0">
-                  Subscribe
-                </Button>
-              </div>
-              <p className="text-[10px] text-cream-600 mt-1.5">
-                No spam. Unsubscribe anytime.
-              </p>
+              <NewsletterForm />
             </div>
 
             {/* Social icons */}

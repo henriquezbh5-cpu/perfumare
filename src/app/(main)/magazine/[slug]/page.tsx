@@ -5,6 +5,8 @@ import { db } from "@/lib/db";
 import { Badge } from "@/components/ui/badge";
 import { getInitials } from "@/lib/utils";
 import { ArrowLeft, Calendar, Clock } from "lucide-react";
+import { Markdown } from "@/components/ui/markdown";
+import { ShareButtons } from "@/components/ui/share-buttons";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -108,9 +110,12 @@ export default async function ArticlePage({ params }: Props) {
         </div>
       )}
 
+      {/* Share */}
+      <ShareButtons title={article.title} />
+
       {/* Body */}
-      <article className="prose prose-invert max-w-none text-bark-300 leading-relaxed whitespace-pre-wrap">
-        {article.body}
+      <article className="max-w-none">
+        <Markdown content={article.body} />
       </article>
 
       {/* Author card */}

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Playfair_Display, Cormorant_Garamond } from "next/font/google";
 import { Providers } from "./providers";
 import { AnimatedBackground } from "@/components/ui/animated-background";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -63,6 +64,7 @@ export default function RootLayout({
             {children}
           </div>
         </Providers>
+        <Analytics />
       </body>
     </html>
   );

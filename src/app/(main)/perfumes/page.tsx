@@ -24,13 +24,15 @@ export default async function PerfumesCatalogPage({ searchParams }: Props) {
 
   const page = Math.max(1, parseInt(String(sp.page ?? "1"), 10) || 1);
   const gender = typeof sp.gender === "string" ? sp.gender : undefined;
+  const concentration = typeof sp.concentration === "string" ? sp.concentration : undefined;
+  const brandSlug = typeof sp.brand === "string" ? sp.brand : undefined;
   const sort = typeof sp.sort === "string" ? sp.sort : "name";
 
   // Build where clause
   const where: Prisma.PerfumeWhereInput = {};
-  if (gender) {
-    where.gender = gender;
-  }
+  if (gender) where.gender = gender;
+  if (concentration) where.concentration = concentration;
+  if (brandSlug) where.brand = { slug: brandSlug };
 
   // Build orderBy
   let orderBy: Prisma.PerfumeOrderByWithRelationInput;
@@ -45,7 +47,7 @@ export default async function PerfumesCatalogPage({ searchParams }: Props) {
       orderBy = { name: "asc" };
   }
 
-  const [perfumes, total] = await Promise.all([
+  const [perfumes, total, brands, concentrations] = await Promise.all([
     db.perfume.findMany({
       where,
       orderBy,
@@ -62,6 +64,15 @@ export default async function PerfumesCatalogPage({ searchParams }: Props) {
       },
     }),
     db.perfume.count({ where }),
+    db.brand.findMany({
+      select: { slug: true, name: true },
+      orderBy: { name: "asc" },
+    }),
+    db.perfume.groupBy({
+      by: ["concentration"],
+      _count: { _all: true },
+      orderBy: { concentration: "asc" },
+    }),
   ]);
 
   const totalPages = Math.ceil(total / PER_PAGE);
@@ -69,12 +80,12 @@ export default async function PerfumesCatalogPage({ searchParams }: Props) {
   // Build filter URL helper
   function buildUrl(overrides: Record<string, string | undefined>) {
     const params = new URLSearchParams();
-    const merged = { gender, sort, page: String(page), ...overrides };
+    const merged = { gender, concentration, brand: brandSlug, sort, page: String(page), ...overrides };
     for (const [k, v] of Object.entries(merged)) {
       if (v && v !== "undefined") params.set(k, v);
     }
     // Reset page when changing filters
-    if (overrides.gender !== undefined || overrides.sort !== undefined) {
+    if (overrides.gender !== undefined || overrides.sort !== undefined || overrides.concentration !== undefined || overrides.brand !== undefined) {
       params.delete("page");
     }
     return `/perfumes?${params.toString()}`;
@@ -124,6 +135,56 @@ export default async function PerfumesCatalogPage({ searchParams }: Props) {
               </Badge>
             </Link>
           ))}
+        </div>
+
+        {/* Concentration filter */}
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-xs uppercase tracking-widest text-cream-500 mr-2">
+            Type:
+          </span>
+          <Link href={buildUrl({ concentration: undefined })} className="no-underline">
+            <Badge variant={!concentration ? "gold" : "default"}>All</Badge>
+          </Link>
+          {concentrations.map((c) => (
+            <Link
+              key={c.concentration}
+              href={buildUrl({ concentration: c.concentration })}
+              className="no-underline"
+            >
+              <Badge variant={concentration === c.concentration ? "gold" : "default"}>
+                {c.concentration} ({c._count._all})
+              </Badge>
+            </Link>
+          ))}
+        </div>
+
+        {/* Brand filter (dropdown-style) */}
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-xs uppercase tracking-widest text-cream-500 mr-2">
+            Brand:
+          </span>
+          <Link href={buildUrl({ brand: undefined })} className="no-underline">
+            <Badge variant={!brandSlug ? "gold" : "default"}>All</Badge>
+          </Link>
+          {brandSlug && (
+            <Badge variant="gold">
+              {brands.find((b) => b.slug === brandSlug)?.name ?? brandSlug}
+            </Badge>
+          )}
+          {!brandSlug && (
+            <select
+              onChange={(e) => {
+                if (e.target.value) window.location.href = buildUrl({ brand: e.target.value });
+              }}
+              className="bg-cream-100/20 border border-cream-300/20 rounded-lg px-2 py-1 text-xs text-bark-400 focus:outline-none focus:border-gold-500/30"
+              defaultValue=""
+            >
+              <option value="">Select brand...</option>
+              {brands.map((b) => (
+                <option key={b.slug} value={b.slug}>{b.name}</option>
+              ))}
+            </select>
+          )}
         </div>
 
         {/* Sort */}

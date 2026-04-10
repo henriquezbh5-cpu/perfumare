@@ -22,6 +22,7 @@ import { Star } from "lucide-react";
 import { ArabianDivider, ArabianCorner } from "@/components/ui/arabian-patterns";
 import { RatingHistogram } from "@/components/perfume/rating-histogram";
 import { VotableNotes } from "@/components/perfume/votable-notes";
+import { ShareButtons } from "@/components/ui/share-buttons";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -271,8 +272,11 @@ export default async function PerfumeDetailPage({ params }: Props) {
               </p>
             )}
 
-            {/* Wardrobe buttons */}
-            <PerfumeWardrobeSection perfumeId={perfume.id} />
+            {/* Wardrobe + Share */}
+            <div className="flex items-center justify-between">
+              <PerfumeWardrobeSection perfumeId={perfume.id} />
+              <ShareButtons title={`${perfume.name} by ${perfume.brand.name}`} />
+            </div>
 
             {/* Rating summary — more prominent */}
             <div
