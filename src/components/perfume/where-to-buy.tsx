@@ -7,22 +7,18 @@ interface RetailerLink {
   url: string;
   price?: string | null;
   currency?: string;
+  icon?: string;
+  color?: string;
+  bgClass?: string;
+  subtitle?: string;
 }
 
 interface WhereToBuyProps {
   links: RetailerLink[];
-  perfumeName?: string;
   className?: string;
 }
 
-const retailerLogos: Record<string, { bg: string; text: string; icon: string }> = {
-  Amazon: { bg: "bg-[#FF9900]/10 border-[#FF9900]/30 hover:bg-[#FF9900]/20", text: "text-[#FF9900]", icon: "🛒" },
-  FragranceNet: { bg: "bg-emerald-500/10 border-emerald-500/30 hover:bg-emerald-500/20", text: "text-emerald-400", icon: "🌿" },
-  Sephora: { bg: "bg-white/10 border-white/30 hover:bg-white/20", text: "text-white", icon: "✨" },
-  Notino: { bg: "bg-blue-500/10 border-blue-500/30 hover:bg-blue-500/20", text: "text-blue-400", icon: "💧" },
-};
-
-export function WhereToBuy({ links, perfumeName, className }: WhereToBuyProps) {
+export function WhereToBuy({ links, className }: WhereToBuyProps) {
   if (links.length === 0) return null;
 
   return (
@@ -40,13 +36,11 @@ export function WhereToBuy({ links, perfumeName, className }: WhereToBuyProps) {
           Affiliate links
         </Link>
       </div>
-      <div className="space-y-2">
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         {links.map((link, idx) => {
-          const style = retailerLogos[link.retailer] ?? {
-            bg: "bg-cream-200/20 border-cream-300/20 hover:bg-cream-200/30",
-            text: "text-bark-400",
-            icon: "🛍️",
-          };
+          const bgClass = link.bgClass ?? "bg-cream-200/20 border-cream-300/20 hover:bg-cream-200/30";
+          const color = link.color ?? "#c9a962";
 
           return (
             <a
@@ -54,35 +48,42 @@ export function WhereToBuy({ links, perfumeName, className }: WhereToBuyProps) {
               href={link.url}
               target="_blank"
               rel="nofollow noopener noreferrer"
-              className={`flex items-center justify-between p-4 border rounded-xl transition-all duration-200 no-underline group ${style.bg}`}
+              className={`flex items-center justify-between p-3.5 border rounded-xl transition-all duration-200 no-underline group ${bgClass}`}
             >
-              <div className="flex items-center gap-3">
-                <span className="text-lg">{style.icon}</span>
+              <div className="flex items-center gap-2.5">
+                <span className="text-lg">{link.icon ?? "🛍️"}</span>
                 <div>
-                  <span className={`text-sm font-semibold ${style.text}`}>
-                    {link.retailer === "Amazon" ? "Buy on Amazon" : `Buy on ${link.retailer}`}
+                  <span className="text-sm font-semibold" style={{ color }}>
+                    {link.retailer}
                   </span>
-                  {link.retailer === "Amazon" && (
-                    <p className="text-[10px] text-cream-600 mt-0.5">Free shipping with Prime</p>
+                  {link.subtitle && (
+                    <p className="text-[10px] text-cream-600 mt-0.5">{link.subtitle}</p>
                   )}
                 </div>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 {link.price && (
-                  <span className="text-lg font-semibold text-bark-400">
+                  <span className="text-sm font-semibold text-bark-400">
                     ${link.price}
                   </span>
                 )}
-                <span className={`text-xs ${style.text} group-hover:translate-x-0.5 transition-transform inline-flex items-center gap-1 font-medium`}>
-                  Check Price <ExternalLink size={12} />
+                <span
+                  className="text-xs font-medium inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform"
+                  style={{ color }}
+                >
+                  Check Price <ExternalLink size={11} />
                 </span>
               </div>
             </a>
           );
         })}
       </div>
+
       <p className="text-[9px] text-cream-600 mt-2 text-center">
-        As an Amazon Associate, Perfumare earns from qualifying purchases.
+        Perfumare earns from qualifying purchases.{" "}
+        <Link href="/affiliate-disclosure" className="text-gold-500/60 no-underline hover:text-gold-500">
+          Learn more
+        </Link>
       </p>
     </section>
   );

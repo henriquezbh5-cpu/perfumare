@@ -23,6 +23,7 @@ import { ArabianDivider, ArabianCorner } from "@/components/ui/arabian-patterns"
 import { RatingHistogram } from "@/components/perfume/rating-histogram";
 import { VotableNotes } from "@/components/perfume/votable-notes";
 import { ShareButtons } from "@/components/ui/share-buttons";
+import { generateAffiliateLinks } from "@/lib/retailers";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -141,6 +142,7 @@ export default async function PerfumeDetailPage({ params }: Props) {
     intensity: a.intensity,
   }));
 
+  // Generate affiliate links for all retailers
   const affiliateLinks = perfume.affiliateLinks.length > 0
     ? perfume.affiliateLinks.map((l) => ({
         retailer: l.retailer,
@@ -148,14 +150,7 @@ export default async function PerfumeDetailPage({ params }: Props) {
         price: l.price?.toString() ?? null,
         currency: l.currency,
       }))
-    : [
-        {
-          retailer: "Amazon",
-          url: `https://www.amazon.com/s?k=${encodeURIComponent(`${perfume.brand.name} ${perfume.name} ${perfume.concentration}`)}&tag=${process.env.NEXT_PUBLIC_AMAZON_TAG ?? "perfumare-20"}`,
-          price: null,
-          currency: "USD",
-        },
-      ];
+    : generateAffiliateLinks(perfume.brand.name, perfume.name, perfume.concentration);
 
   const mainAccordColor =
     perfume.accords.sort((a, b) => b.intensity - a.intensity)[0]?.accord
