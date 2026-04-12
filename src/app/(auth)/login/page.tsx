@@ -12,8 +12,14 @@ export default function LoginPage() {
 
         <SignInButtons />
 
-        <div className="mt-6 text-center">
-          <Link href="/" className="text-sm text-bark-300 hover:text-gold-500">
+        <div className="mt-6 text-center space-y-2">
+          <Link
+            href="/forgot-password"
+            className="block text-sm text-cream-500 hover:text-gold-500 no-underline"
+          >
+            Forgot your password?
+          </Link>
+          <Link href="/" className="block text-sm text-bark-300 hover:text-gold-500 no-underline">
             &larr; Back to home
           </Link>
         </div>

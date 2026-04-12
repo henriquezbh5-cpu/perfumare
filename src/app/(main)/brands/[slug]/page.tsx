@@ -55,8 +55,25 @@ export default async function BrandDetailPage({ params }: Props) {
     notFound();
   }
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Brand",
+    name: brand.name,
+    ...(brand.description ? { description: brand.description } : {}),
+    ...(brand.logoUrl ? { logo: brand.logoUrl } : {}),
+    ...(brand.websiteUrl ? { url: brand.websiteUrl } : {}),
+    ...(brand.founded ? { foundingDate: String(brand.founded) } : {}),
+    ...(brand.country
+      ? { address: { "@type": "PostalAddress", addressCountry: brand.country } }
+      : {}),
+  };
+
   return (
     <div className="space-y-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Breadcrumb */}
       <nav className="text-sm text-cream-500">
         <Link href="/" className="hover:text-gold-500 no-underline text-cream-500">

@@ -14,8 +14,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/search`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.6 },
     { url: `${baseUrl}/finder`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
     { url: `${baseUrl}/compare`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.6 },
+    { url: `${baseUrl}/best`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.7 },
     { url: `${baseUrl}/community`, lastModified: new Date(), changeFrequency: "daily", priority: 0.6 },
+    { url: `${baseUrl}/community/groups`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.5 },
+    { url: `${baseUrl}/community/members`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.5 },
     { url: `${baseUrl}/magazine`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.7 },
+    { url: `${baseUrl}/about`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.4 },
+    { url: `${baseUrl}/contact`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.3 },
+    { url: `${baseUrl}/privacy`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.2 },
+    { url: `${baseUrl}/terms`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.2 },
+    { url: `${baseUrl}/affiliate-disclosure`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.2 },
   ];
 
   // Dynamic perfume pages
@@ -44,6 +52,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
+  // Dynamic note pages
+  const notes = await db.note.findMany({
+    select: { slug: true, updatedAt: true },
+  });
+
+  const notePages: MetadataRoute.Sitemap = notes.map((n) => ({
+    url: `${baseUrl}/notes/${n.slug}`,
+    lastModified: n.updatedAt,
+    changeFrequency: "monthly",
+    priority: 0.6,
+  }));
+
+  // Dynamic perfumer pages
+  const perfumers = await db.perfumer.findMany({
+    select: { slug: true, updatedAt: true },
+  });
+
+  const perfumerPages: MetadataRoute.Sitemap = perfumers.map((p) => ({
+    url: `${baseUrl}/perfumers/${p.slug}`,
+    lastModified: p.updatedAt,
+    changeFrequency: "monthly",
+    priority: 0.6,
+  }));
+
   // Articles
   const articles = await db.article.findMany({
     where: { publishedAt: { not: null } },
@@ -57,5 +89,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  return [...staticPages, ...perfumePages, ...brandPages, ...articlePages];
+  // Forum categories
+  const forumCategories = await db.forumCategory.findMany({
+    select: { slug: true },
+  });
+
+  const forumPages: MetadataRoute.Sitemap = forumCategories.map((c) => ({
+    url: `${baseUrl}/community/${c.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "daily" as const,
+    priority: 0.5,
+  }));
+
+  return [
+    ...staticPages,
+    ...perfumePages,
+    ...brandPages,
+    ...notePages,
+    ...perfumerPages,
+    ...articlePages,
+    ...forumPages,
+  ];
 }

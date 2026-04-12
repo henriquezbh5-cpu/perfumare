@@ -70,8 +70,21 @@ export default async function NoteDetailPage({ params }: Props) {
     notFound();
   }
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Thing",
+    name: note.name,
+    ...(note.description ? { description: note.description } : {}),
+    additionalType: "Fragrance Note",
+    category: note.family,
+  };
+
   return (
     <div className="space-y-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Breadcrumb */}
       <nav className="text-sm text-cream-500">
         <Link href="/" className="hover:text-gold-500 no-underline text-cream-500">

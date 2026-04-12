@@ -4,22 +4,24 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { Menu, X, User, LogOut, Settings, Search } from "lucide-react";
 import { SearchBar } from "./search-bar";
+import { LanguageSwitcher } from "./language-switcher";
 import { cn } from "@/lib/utils";
 import { getInitials } from "@/lib/utils";
 
-const navLinks = [
-  { label: "Perfumes", href: "/perfumes" },
-  { label: "Brands", href: "/brands" },
-  { label: "Notes", href: "/notes" },
-  { label: "Perfumers", href: "/perfumers" },
-  { label: "Finder", href: "/finder" },
-  { label: "Compare", href: "/compare" },
-  { label: "Best Of", href: "/best" },
-  { label: "Community", href: "/community" },
-  { label: "Magazine", href: "/magazine" },
-];
+const navKeys = [
+  { key: "perfumes", href: "/perfumes" },
+  { key: "brands", href: "/brands" },
+  { key: "notes", href: "/notes" },
+  { key: "perfumers", href: "/perfumers" },
+  { key: "finder", href: "/finder" },
+  { key: "compare", href: "/compare" },
+  { key: "bestOf", href: "/best" },
+  { key: "community", href: "/community" },
+  { key: "magazine", href: "/magazine" },
+] as const;
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -29,6 +31,7 @@ export function Header() {
   const pathname = usePathname();
   const { data: session } = useSession();
   const userMenuRef = useRef<HTMLDivElement>(null);
+  const t = useTranslations("nav");
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 60);
@@ -72,7 +75,7 @@ export function Header() {
 
             {/* Desktop nav — center */}
             <ul className="hidden lg:flex items-center gap-5">
-              {navLinks.map((link) => {
+              {navKeys.map((link) => {
                 const isActive =
                   pathname === link.href ||
                   (link.href !== "/" && pathname.startsWith(link.href));
@@ -87,7 +90,7 @@ export function Header() {
                           : "text-bark-300 hover:text-gold-500"
                       )}
                     >
-                      {link.label}
+                      {t(link.key)}
                       {isActive && (
                         <span className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gold-500 rounded-full" />
                       )}
@@ -97,12 +100,18 @@ export function Header() {
               })}
             </ul>
 
-            {/* Right side — search + auth */}
+            {/* Right side — language + search + auth */}
             <div className="flex items-center gap-3">
+              {/* Language switcher */}
+              <div className="hidden sm:block">
+                <LanguageSwitcher />
+              </div>
+
               {/* Search toggle */}
               <button
                 onClick={() => setSearchOpen(!searchOpen)}
                 className="p-2 text-bark-300 hover:text-gold-500 transition-colors"
+                aria-label="Search"
               >
                 <Search size={18} />
               </button>
@@ -127,21 +136,21 @@ export function Header() {
                   {userMenuOpen && (
                     <div className="absolute right-0 top-full mt-2 w-48 bg-cream-100/95 backdrop-blur-xl rounded-lg shadow-card-hover border border-cream-300/20 py-1 z-50">
                       <Link href="/profile" className="flex items-center gap-2 px-4 py-2 text-sm text-bark-400 hover:bg-cream-200/30 no-underline">
-                        <User size={14} /> Profile
+                        <User size={14} /> {t("profile")}
                       </Link>
                       <Link href="/profile?tab=settings" className="flex items-center gap-2 px-4 py-2 text-sm text-bark-400 hover:bg-cream-200/30 no-underline">
-                        <Settings size={14} /> Settings
+                        <Settings size={14} /> {t("settings")}
                       </Link>
                       <div className="h-px bg-cream-300/20 my-1" />
                       <button onClick={() => signOut({ callbackUrl: "/" })} className="flex items-center gap-2 px-4 py-2 text-sm text-bark-400 hover:bg-cream-200/30 w-full text-left">
-                        <LogOut size={14} /> Sign Out
+                        <LogOut size={14} /> {t("signOut")}
                       </button>
                     </div>
                   )}
                 </div>
               ) : (
                 <Link href="/login" className="text-xs text-bark-300 hover:text-gold-500 transition-colors no-underline">
-                  Sign In
+                  {t("signIn")}
                 </Link>
               )}
 
@@ -149,7 +158,7 @@ export function Header() {
               <button
                 onClick={() => setMobileOpen(!mobileOpen)}
                 className="lg:hidden p-2 text-bark-400 hover:text-gold-500 transition-colors"
-                aria-label={mobileOpen ? "Close menu" : "Open menu"}
+                aria-label={mobileOpen ? t("closeMenu") : t("openMenu")}
               >
                 {mobileOpen ? <X size={20} /> : <Menu size={20} />}
               </button>
@@ -171,7 +180,7 @@ export function Header() {
       {mobileOpen && (
         <div className="lg:hidden bg-cream-50/95 backdrop-blur-xl border-b border-cream-300/10">
           <ul className="mx-auto max-w-7xl px-4 py-3 space-y-1">
-            {navLinks.map((link) => {
+            {navKeys.map((link) => {
               const isActive =
                 pathname === link.href ||
                 (link.href !== "/" && pathname.startsWith(link.href));
@@ -186,12 +195,16 @@ export function Header() {
                         : "text-bark-300 hover:text-gold-500 hover:bg-cream-200/20"
                     )}
                   >
-                    {link.label}
+                    {t(link.key)}
                   </Link>
                 </li>
               );
             })}
           </ul>
+          {/* Language switcher in mobile */}
+          <div className="px-4 pb-3 sm:hidden">
+            <LanguageSwitcher />
+          </div>
         </div>
       )}
     </header>

@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { Badge } from "@/components/ui/badge";
+import { ReportActions } from "./report-actions";
 
 export default async function AdminReportsPage() {
   const reports = await db.report.findMany({
@@ -47,6 +48,7 @@ export default async function AdminReportsPage() {
                     </span>
                   </p>
                 </div>
+                <ReportActions reportId={report.id} currentStatus={report.status} />
               </div>
             </div>
           ))}

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Cormorant_Garamond } from "next/font/google";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
 import { Providers } from "./providers";
 import { AnimatedBackground } from "@/components/ui/animated-background";
 import { Analytics } from "@vercel/analytics/next";
@@ -47,23 +49,28 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
     <html
-      lang="en"
+      lang={locale}
       className={`h-full antialiased ${playfair.variable} ${cormorant.variable}`}
     >
       <body className="min-h-full flex flex-col">
         <AnimatedBackground />
-        <Providers>
-          <div className="relative z-10 flex flex-col min-h-full">
-            {children}
-          </div>
-        </Providers>
+        <NextIntlClientProvider messages={messages}>
+          <Providers>
+            <div className="relative z-10 flex flex-col min-h-full">
+              {children}
+            </div>
+          </Providers>
+        </NextIntlClientProvider>
         <Analytics />
       </body>
     </html>

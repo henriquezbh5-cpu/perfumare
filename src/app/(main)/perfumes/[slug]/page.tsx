@@ -23,6 +23,7 @@ import { ArabianDivider, ArabianCorner } from "@/components/ui/arabian-patterns"
 import { RatingHistogram } from "@/components/perfume/rating-histogram";
 import { VotableNotes } from "@/components/perfume/votable-notes";
 import { ShareButtons } from "@/components/ui/share-buttons";
+import { SimilarPerfumes } from "@/components/perfume/similar-perfumes";
 import { generateAffiliateLinks } from "@/lib/retailers";
 
 type Props = {
@@ -56,9 +57,10 @@ async function getPerfume(slug: string) {
 async function getSimilarPerfumes(
   perfumeId: string,
   brandId: string,
-  accordIds: string[]
+  accordIds: string[],
+  noteIds: string[]
 ) {
-  return db.perfume.findMany({
+  const candidates = await db.perfume.findMany({
     where: {
       id: { not: perfumeId },
       OR: [
@@ -66,15 +68,38 @@ async function getSimilarPerfumes(
         ...(accordIds.length > 0
           ? [{ accords: { some: { accordId: { in: accordIds } } } }]
           : []),
+        ...(noteIds.length > 0
+          ? [{ notes: { some: { noteId: { in: noteIds } } } }]
+          : []),
       ],
     },
     include: {
       brand: true,
       accords: { include: { accord: true } },
+      notes: { include: { note: true } },
+      reviews: { select: { rating: true } },
       _count: { select: { reviews: true } },
     },
-    take: 6,
+    take: 20,
   });
+
+  // Score each candidate by shared accords + shared notes
+  const scored = candidates.map((c) => {
+    const cAccordIds = new Set(c.accords.map((a) => a.accordId));
+    const cNoteIds = new Set(c.notes.map((n) => n.noteId));
+    const sharedAccords = accordIds.filter((id) => cAccordIds.has(id)).length;
+    const sharedNotes = noteIds.filter((id) => cNoteIds.has(id)).length;
+    const maxAccords = Math.max(accordIds.length, c.accords.length, 1);
+    const maxNotes = Math.max(noteIds.length, c.notes.length, 1);
+    const similarity = Math.round(
+      ((sharedAccords / maxAccords) * 60 + (sharedNotes / maxNotes) * 40)
+    );
+    return { ...c, similarity, sharedNotes };
+  });
+
+  return scored
+    .sort((a, b) => b.similarity - a.similarity)
+    .slice(0, 8);
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -114,10 +139,12 @@ export default async function PerfumeDetailPage({ params }: Props) {
   }
 
   const accordIds = perfume.accords.map((a) => a.accordId);
+  const noteIds = perfume.notes.map((n) => n.noteId);
   const similarPerfumes = await getSimilarPerfumes(
     perfume.id,
     perfume.brandId,
-    accordIds
+    accordIds,
+    noteIds
   );
 
   const avgRating =
@@ -349,6 +376,65 @@ export default async function PerfumeDetailPage({ params }: Props) {
 
       <ArabianDivider />
 
+      {/* ===== SIMILAR PERFUMES — Right after notes, most prominent ===== */}
+      <SimilarPerfumes
+        current={{
+          name: perfume.name,
+          brand: perfume.brand.name,
+          imageUrl: perfume.imageUrl,
+          accords: accords,
+        }}
+        similars={similarPerfumes.map((p) => {
+          const pAvg =
+            p.reviews.length > 0
+              ? p.reviews.reduce((sum, r) => sum + r.rating, 0) / p.reviews.length
+              : 0;
+          const currentNoteNames = new Set(
+            perfume.notes.map((n) => n.note.name)
+          );
+          const shared = p.notes
+            .filter((n) => currentNoteNames.has(n.note.name))
+            .map((n) => n.note.name);
+          return {
+            slug: p.slug,
+            name: p.name,
+            brand: p.brand.name,
+            year: p.year,
+            concentration: p.concentration,
+            imageUrl: p.imageUrl,
+            rating: pAvg,
+            reviewCount: p._count.reviews,
+            accords: p.accords
+              .sort((a, b) => b.intensity - a.intensity)
+              .map((a) => ({
+                name: a.accord.name,
+                color: a.accord.color,
+                intensity: a.intensity,
+              })),
+            sharedNotes: shared,
+            similarity: p.similarity,
+          };
+        })}
+      />
+
+      <ArabianDivider />
+
+      {/* Inspired By / Dupe info */}
+      {perfume.inspiredBy && (
+        <section>
+          <h3 className="section-title mb-3">Inspired By</h3>
+          <div className="rounded-xl border border-cream-300/10 bg-cream-100/5 p-4 flex items-start gap-3">
+            <span className="text-xl">💡</span>
+            <div>
+              <p className="text-sm text-bark-300">
+                This fragrance is commonly compared to <strong className="text-bark-400">{perfume.inspiredBy}</strong>.
+                Many enthusiasts consider it an excellent alternative at a more accessible price point.
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Performance + Season/Time (live from API) */}
       <section>
         <PerfumePerformanceSection
@@ -422,60 +508,6 @@ export default async function PerfumeDetailPage({ params }: Props) {
           </div>
         )}
       </section>
-
-      {/* Inspired By / Dupe info */}
-      {perfume.inspiredBy && (
-        <section>
-          <h3 className="section-title mb-3">Inspired By</h3>
-          <div className="rounded-xl border border-cream-300/10 bg-cream-100/5 p-4 flex items-start gap-3">
-            <span className="text-xl">💡</span>
-            <div>
-              <p className="text-sm text-bark-300">
-                This fragrance is commonly compared to <strong className="text-bark-400">{perfume.inspiredBy}</strong>.
-                Many enthusiasts consider it an excellent alternative at a more accessible price point.
-              </p>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Similar Perfumes */}
-      {similarPerfumes.length > 0 && (
-        <section>
-          <h3 className="section-title mb-2">Similar Perfumes</h3>
-          <p className="text-sm text-cream-500 mb-6">
-            People who like this also like...
-          </p>
-          <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory">
-            {similarPerfumes.map((p) => {
-              const pRating = 0;
-              const topAccords = p.accords
-                .sort((a, b) => b.intensity - a.intensity)
-                .slice(0, 3)
-                .map((a) => ({ name: a.accord.name, color: a.accord.color }));
-
-              return (
-                <div
-                  key={p.id}
-                  className="shrink-0 w-40 md:w-48 snap-start"
-                >
-                  <PerfumeCard
-                    slug={p.slug}
-                    name={p.name}
-                    brand={p.brand.name}
-                    year={p.year}
-                    concentration={p.concentration}
-                    imageUrl={p.imageUrl}
-                    rating={pRating}
-                    reviewCount={p._count.reviews}
-                    topAccords={topAccords}
-                  />
-                </div>
-              );
-            })}
-          </div>
-        </section>
-      )}
     </div>
   );
 }

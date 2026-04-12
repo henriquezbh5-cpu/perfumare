@@ -30,8 +30,12 @@ export function Rating({
   const clampedValue = Math.min(Math.max(value, 0), max);
 
   return (
-    <div className={cn("inline-flex items-center gap-1", className)}>
-      <div className="flex">
+    <div
+      className={cn("inline-flex items-center gap-1", className)}
+      role="img"
+      aria-label={`Rating: ${clampedValue.toFixed(1)} out of ${max}`}
+    >
+      <div className="flex" aria-hidden="true">
         {Array.from({ length: max }, (_, i) => {
           const filled = i < Math.floor(clampedValue);
           const partial = !filled && i < clampedValue;

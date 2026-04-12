@@ -39,8 +39,31 @@ export default async function ArticlePage({ params }: Props) {
   const wordCount = article.body.split(/\s+/).length;
   const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: article.title,
+    ...(article.excerpt ? { description: article.excerpt } : {}),
+    ...(article.featuredImage ? { image: article.featuredImage } : {}),
+    datePublished: article.publishedAt.toISOString(),
+    dateModified: article.updatedAt.toISOString(),
+    author: {
+      "@type": "Person",
+      name: article.author.name ?? article.author.username ?? "Perfumare",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Perfumare",
+      url: "https://perfumare-jade.vercel.app",
+    },
+  };
+
   return (
     <div className="max-w-3xl mx-auto space-y-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Back */}
       <Link
         href="/magazine"

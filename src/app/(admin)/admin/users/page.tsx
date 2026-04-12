@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { Badge } from "@/components/ui/badge";
+import { UserRoleSelect } from "./user-role-select";
 
 export default async function AdminUsersPage() {
   const users = await db.user.findMany({
@@ -44,9 +45,7 @@ export default async function AdminUsersPage() {
                 </td>
                 <td className="px-4 py-3 text-cream-600">{u.email}</td>
                 <td className="px-4 py-3">
-                  <Badge variant={u.role === "admin" ? "gold" : "default"}>
-                    {u.role}
-                  </Badge>
+                  <UserRoleSelect userId={u.id} currentRole={u.role} />
                 </td>
                 <td className="px-4 py-3 text-cream-600">{u._count.reviews}</td>
                 <td className="px-4 py-3 text-cream-600">{u._count.forumPosts}</td>
