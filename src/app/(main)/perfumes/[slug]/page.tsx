@@ -347,36 +347,7 @@ export default async function PerfumeDetailPage({ params }: Props) {
         </div>
       </div>
 
-      {/* Description */}
-      {perfume.description && (
-        <section>
-          <h3 className="section-title mb-4">Description</h3>
-          <p className="text-bark-300 leading-relaxed">{perfume.description}</p>
-        </section>
-      )}
-
-      {/* Accords */}
-      {accords.length > 0 && <AccordBars accords={accords} />}
-
-      <ArabianDivider />
-
-      {/* Notes — Votable */}
-      {perfume.notes.length > 0 && (
-        <VotableNotes
-          perfumeId={perfume.id}
-          notes={perfume.notes.map((n) => ({
-            name: n.note.name,
-            slug: n.note.slug,
-            layer: n.layer,
-            voteCount: n.voteCount,
-            noteId: n.noteId,
-          }))}
-        />
-      )}
-
-      <ArabianDivider />
-
-      {/* ===== SIMILAR PERFUMES — Right after notes, most prominent ===== */}
+      {/* ===== 1. SIMILAR PERFUMES — First thing after hero ===== */}
       <SimilarPerfumes
         current={{
           name: perfume.name,
@@ -419,6 +390,40 @@ export default async function PerfumeDetailPage({ params }: Props) {
 
       <ArabianDivider />
 
+      {/* ===== 2. WHERE TO BUY — Amazon link ===== */}
+      <WhereToBuy links={affiliateLinks} />
+
+      <ArabianDivider />
+
+      {/* Description */}
+      {perfume.description && (
+        <section>
+          <h3 className="section-title mb-4">Description</h3>
+          <p className="text-bark-300 leading-relaxed">{perfume.description}</p>
+        </section>
+      )}
+
+      {/* Accords */}
+      {accords.length > 0 && <AccordBars accords={accords} />}
+
+      <ArabianDivider />
+
+      {/* Notes — Votable */}
+      {perfume.notes.length > 0 && (
+        <VotableNotes
+          perfumeId={perfume.id}
+          notes={perfume.notes.map((n) => ({
+            name: n.note.name,
+            slug: n.note.slug,
+            layer: n.layer,
+            voteCount: n.voteCount,
+            noteId: n.noteId,
+          }))}
+        />
+      )}
+
+      <ArabianDivider />
+
       {/* Inspired By / Dupe info */}
       {perfume.inspiredBy && (
         <section>
@@ -442,9 +447,6 @@ export default async function PerfumeDetailPage({ params }: Props) {
           perfumeName={perfume.name}
         />
       </section>
-
-      {/* Where to Buy */}
-      <WhereToBuy links={affiliateLinks} />
 
       <ArabianDivider />
 

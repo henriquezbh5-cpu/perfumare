@@ -92,15 +92,17 @@ export function generateAffiliateLinks(
 ): { retailer: string; url: string; icon: string; color: string; bgClass: string; subtitle: string }[] {
   const query = `${brandName} ${perfumeName} ${concentration} perfume`;
 
-  return RETAILERS.map((r) => {
-    const tag = (typeof process !== "undefined" && process.env?.[r.tagEnvVar]) || r.defaultTag;
-    return {
-      retailer: r.name,
-      url: r.searchUrl(query, tag),
-      icon: r.icon,
-      color: r.color,
-      bgClass: r.bgClass,
-      subtitle: r.subtitle,
-    };
-  });
+  // For now, only show Amazon — other retailers will be added later
+  const amazon = RETAILERS.find((r) => r.slug === "amazon")!;
+  const tag = (typeof process !== "undefined" && process.env?.[amazon.tagEnvVar]) || amazon.defaultTag;
+  return [
+    {
+      retailer: amazon.name,
+      url: amazon.searchUrl(query, tag),
+      icon: amazon.icon,
+      color: amazon.color,
+      bgClass: amazon.bgClass,
+      subtitle: amazon.subtitle,
+    },
+  ];
 }
